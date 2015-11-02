@@ -106,32 +106,33 @@ define(function (require) {
 		},
 		// router.routes - All registered routes
 		routes: [],
+		//routes: {},
 		// router.activeRoute - A reference to the active route
 		activeRoute: {},
-		// router.registerRoutes(routes) - Register routes
+		// router.addRoutes(routes) - Register routes
 		//
 		// This will add the routes to the existing routes. Specifying a route with the same name as an existing route will
 		// overwrite the old route with the new one.
 		//
 		// Example
-		// router.registerRoutes({
+		// router.addRoutes({
 		//   home: {path: '/', moduleId: 'home/homeView'},
 		//   customer: {path: '/customer/:id', moduleId: 'customer/customerView'},
 		//   notFound: {path: '*', moduleId: 'notFound/notFoundView'}
 		// })
-		registerRoutes: function (routes) {
+		addRoutes: function (routes) {
 			for (var key in routes) {
 				if (routes.hasOwnProperty(key)) {
-					router.registerRoute(routes[key]);
+					router.addRoute(routes[key]);
 				}
 			}
 			return router;
 		},
-		registerRoute: function (route) {
+		addRoute: function (route) {
 			router.routes.push(route);
 			return router;
 		},
-		registerRouteAt: function (index, route) {
+		addRouteAt: function (index, route) {
 			router.routes.splice(index, 0, route);
 			return router;
 		},
@@ -446,7 +447,7 @@ define(function (require) {
 				// Register newly discovered routes
 				if (route.isNew) {
 					delete route.isNew;
-					router.registerRouteAt(0, route);
+					router.addRouteAt(0, route);
 				}
 				// Make sure this is still the active route from when loadCurrentRoute was called. The asynchronous nature
 				// of AMD loaders means we could have fireed multiple hashchanges or popstates before the AMD module finished

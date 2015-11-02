@@ -62,7 +62,7 @@ define(function (require) {
 			routes = initOptions.routes || {};
 			routesByPath = {};
 			setupRoutesByPaths(routes);
-			router.registerRoutes(routes);
+			router.addRoutes(routes);
 
 			for (var prop in routes) {
 				routesByPath[routes[prop]] = prop;
@@ -83,12 +83,13 @@ define(function (require) {
 			router.go(options);
 		};
 
-		that.registerRoute = function (route) {
+		that.addRoute = function (route) {
 			routes[route.path] = route.moduleId;
-			that.registerRouteByPath(route);
+			that.addRouteByPath(route);
+			//router.addRouteAt(0, route); TODO
 		};
 
-		that.registerRouteByPath = function (route) {
+		that.addRouteByPath = function (route) {
 			routesByPath[route.moduleId] = route.path;
 		};
 		
@@ -523,7 +524,7 @@ define(function (require) {
 			for (var key in routes) {
 				if (routes.hasOwnProperty(key)) {
 					var route = routes[key];
-					that.registerRouteByPath(route);
+					that.addRouteByPath(route);
 				}
 			}
 		}
