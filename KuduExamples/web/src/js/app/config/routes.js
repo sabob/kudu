@@ -5,59 +5,44 @@ define(function (require) {
 	var router = require("kudu/router/router");
 	var Ractive = require("ractive");
 	var home = require("app/views/home/home");
+	var customer = require("app/views/customer/customer");
 	var notFound = require("app/views/notfound/notFound");
 
 	function routes() {
 
+		var homeRoute = {path: 'home',
+			moduleId: home.id,
+			enter: function (args) {
+				var deferred = $.Deferred();
+				var promise = deferred.promise();
+				args.view.render(args.target);
+				//$(args.target).show();
+//				$(args.target).fadeIn(1000, function () {
+//					deferred.resolve();
+//				});
+				//return promise;
+			},
+			leave: function (args) {
+				var deferred = $.Deferred();
+				var promise = deferred.promise();
+				args.prevView.unrender(args.target);
+//				$(args.target).fadeOut(1000, function () {
+//					args.prevView.unrender(args.target);
+//					deferred.resolve();
+//				});
+				//return promise;
+			}
+		};
+
 		var routes = {
-			home: {path: 'home', moduleId: home.id},
+			home: homeRoute,
+			customer: {path: '/customer', moduleId: customer.id},
 			notFound: {path: '*', moduleId: notFound.id}
 		};
 
-		kudu.init({
-			target: "#container",
-			routes: routes,
-			unknownRouteResolver: resolveUnknownRoutes
-		});
-
-		function resolveUnknownRoutes() {
-			var deferred = $.Deferred();
-			var promise = deferred.promise();
-
-			var path = router.urlPath(window.location.href);
-
-			// TODO router.js urlPath only picks up hash if it starts with a '/', but requireJs might want to pick it up under another path?
-			//http://localhost:9988/index.html#/js/app/views/home/Home
-			//console.log("PATH", path.substr(1));
-			//console.log("PATH", path);
-			
-			if (path.indexOf("/index.") >= 0 || path.endsWith("/")) {
-				// if no path found in hash, use default module, Home in this example. This code could move to router.js??
-				var newRoute = {path: 'home', moduleId: home.id};
-				deferred.resolve(newRoute);
-				return promise;
-			}
-
-			if (path.indexOf("/") === 0) {
-				path = path.substr(1);
-			}
-
-			require([path], function (module) {
-				var newRoute = {
-					path: path,
-					moduleId: path
-				};
-				deferred.resolve(newRoute);
-
-			}, function () {
-				deferred.reject();
-
-			});
-
-			return promise;
-		}
-
 		Ractive.defaults.debug = true;
+		
+		return routes;
 
 	}
 	return routes();

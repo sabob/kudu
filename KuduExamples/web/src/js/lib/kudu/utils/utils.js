@@ -6,6 +6,14 @@ define(function (require) {
 
 		var that = {};
 
+		var deferred = $.Deferred();
+		deferred.resolve();
+		var noopPromise = deferred.promise();
+		
+		that.noopPromise = function() {
+			return noopPromise;
+		}
+
 		that.isPromise = function (o) {
 			if (o == null) {
 				return false;

@@ -1,11 +1,9 @@
 define(function (require) {
 	var $ = require("jquery");
 	var kudu = require("kudu/kudu");
-	//require('ractive-transitions-fade');
-	var customer = require("../customer/customer");
-	var template = require("rvc!./home");
+	var template = require("rvc!./customer");
 
-	function home() {
+	function customer() {
 
 		var that = {};
 
@@ -32,10 +30,12 @@ define(function (require) {
 		function createView() {
 
 			var view = new template({
-				addCustomer: function () {
+				home: function () {
 					var e = this.event;
 					e.original.preventDefault();
-					kudu.route({ctrl: customer});
+					require(["../home/home"], function (home) {
+						kudu.route({ctrl: home});
+					});
 				}
 			});
 			return view;
@@ -68,5 +68,5 @@ define(function (require) {
 
 		return that;
 	}
-	return home;
+	return customer;
 });

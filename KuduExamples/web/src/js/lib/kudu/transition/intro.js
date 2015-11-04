@@ -6,12 +6,17 @@ define(function (require) {
 	function intro(options) {
 
 		var deferred = $.Deferred();
+		var promise = deferred.promise();
+		
+		if (options.transitionsEnabled !== true) {
+			deferred.resolve();
+			return promise;
+		}
 		
 		var transition = options.intro || fade.intro;
 
 		transition(options, deferred.resolve);
 
-		var promise = deferred.promise();
 		return promise;
 	}
 	return intro;

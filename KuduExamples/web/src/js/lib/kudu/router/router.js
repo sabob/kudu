@@ -41,6 +41,8 @@ define(function (require) {
 	};
 
 	var unknownRouteResolver;
+	
+	var defaultRoute;
 
 	var noop = function () {
 	};
@@ -70,7 +72,8 @@ define(function (require) {
 			if (typeof (options) === 'undefined') {
 				options = {};
 			}
-			unknownRouteResolver = options.unknownRouteResolver || noop;
+			unknownRouteResolver = options.unknownRouteResolver || resolveUnknownRoutes;
+			defaultRoute = options.defaultRoute || null;
 
 			// Set up the window popstate and hashchange event listeners
 			if (window.addEventListener) {
@@ -384,7 +387,7 @@ define(function (require) {
 				//}
 			}
 
-			if (routeToLoad == null || routeToLoad.path === '*' && typeof unknownRouteResolver === 'function') {
+			if (routeToLoad == null || routeToLoad.path === '*') {
 				// No route found for url, check if new route should be created
 				options.route = routeToLoad;
 				router.handleUnknownRoute(options);
@@ -464,7 +467,8 @@ define(function (require) {
 					var routerOptions = {
 						routeParams: urlParams,
 						module: module,
-						args: options.args
+						args: options.args,
+						route: route
 					};
 					router.fire('routeload', routerOptions);
 				}
@@ -856,6 +860,42 @@ define(function (require) {
 			return hash;
 		}
 	};
+	
+	function resolveUnknownRoutes() {
+		var deferred = $.Deferred();
+		var promise = deferred.promise();
+		
+		var hashIndex = window.location.href.indexOf('#');
+
+		if (hashIndex === -1 || hashIndex === location.href.length - 1) {
+			// no hash found or hash is at end of url and no hash part is available, so use default view
+			if (defaultRoute == null) {
+				throw new Error("Couldn't resolve the url, " + location.href + ", to a route. Please set the option 'kudu.defaultRoute' to render a default page!");
+			}
+			deferred.resolve(defaultRoute);
+			return promise;	
+		}
+
+		var path = router.urlPath(window.location.href);
+
+		if (path.indexOf("/") === 0) {
+			path = path.substr(1);
+		}
+
+		require([path], function (module) {
+			var newRoute = {
+				path: path,
+				moduleId: path
+			};
+			deferred.resolve(newRoute);
+
+		}, function () {
+			deferred.reject();
+
+		});
+
+		return promise;
+	}
 
 	function appendHashParams(hash, params) {
 		// TODO check for existing params on hash

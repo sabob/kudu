@@ -60,7 +60,7 @@ define(function (require) {
 	};*/
 
 	var routes = {
-		home: {path: 'home', moduleId: home.id},
+		home: {path: 'home', moduleId: home.id, moo: "pok"},
 		artist: {path: 'artist', moduleId: artistSearch.id},
 		artistEdit: {path: 'artistEdit', moduleId: artistEdit.id},
 		art: {path: 'art', moduleId: artSearch.id},
@@ -209,6 +209,7 @@ define(function (require) {
 		if (path.indexOf("/index.") >= 0) {
 			// if no path found in hash, use default module, Home in this example. This code could move to router.js??
 			var newRoute = {path: 'home', moduleId: home.id};
+			debugger;
 			deferred.resolve(newRoute);
 			return promise;
 		}
