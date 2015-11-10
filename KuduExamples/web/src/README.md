@@ -1,6 +1,7 @@
 NEW router
 
-router.add("/path", {
+kudu.addRoute(
+    path: "/path", {
      ctrl: HomeCtrl,
     enter: function(view, oldView, ctrl, prevCtrl) {},
     leave: function(view, oldView, ctrl, prevCtrl) {}
@@ -79,7 +80,8 @@ var notFoundCtrl = require("notFoundCtrl");
 // Initialize kudu with the given routes and a target id (#someId) where the views will be rendered to
     kudu.init({
         target: "#container",
-        routes: routes
+        routes: routes,
+        fx: true
 });
 
 Controller

@@ -40,8 +40,13 @@ define(function (require) {
 		routeload: []
 	};
 
+	// routes - All registered routes
+	var routes = [];
+
+	var routesByPath = {};
+
 	var unknownRouteResolver;
-	
+
 	var defaultRoute;
 
 	var noop = function () {
@@ -72,6 +77,7 @@ define(function (require) {
 			if (typeof (options) === 'undefined') {
 				options = {};
 			}
+			router.addRoutes(options.routes);
 			unknownRouteResolver = options.unknownRouteResolver || resolveUnknownRoutes;
 			defaultRoute = options.defaultRoute || null;
 
@@ -107,8 +113,6 @@ define(function (require) {
 
 			return router;
 		},
-		// router.routes - All registered routes
-		routes: [],
 		//routes: {},
 		// router.activeRoute - A reference to the active route
 		activeRoute: {},
@@ -132,12 +136,23 @@ define(function (require) {
 			return router;
 		},
 		addRoute: function (route) {
-			router.routes.push(route);
+			routes.push(route);
+			router.addRouteByPath(route);
 			return router;
 		},
 		addRouteAt: function (index, route) {
-			router.routes.splice(index, 0, route);
+			routes.splice(index, 0, route);
+			router.addRouteByPath(route);
 			return router;
+		},
+		addRouteByPath: function (route) {
+			routesByPath[route.moduleId] = route.path;
+		},
+		getRoutes: function () {
+			return routes;
+		},
+		getRoutesByPath: function () {
+			return routesByPath;
 		},
 		// router.on(eventName, eventHandler([arg1, [arg2]]) {}) - Register an event handler
 		//
@@ -199,9 +214,9 @@ define(function (require) {
 			var route = null;
 
 			//var currentPath = router.urlPath(window.location.href);
-			var routes = router.findRoutesForCtrl(ctrl);
-			for (var i = 0; i < routes.length; i++) {
-				var testRoute = routes[i];
+			var ctrlRoutes = router.findRoutesForCtrl(ctrl);
+			for (var i = 0; i < ctrlRoutes.length; i++) {
+				var testRoute = ctrlRoutes[i];
 				var match = router.testCtrlRoute(testRoute.path, options.routeParams);
 				if (match) {
 					route = testRoute;
@@ -211,8 +226,8 @@ define(function (require) {
 
 			if (route == null) {
 				console.error("No route matched request to Controller '" + ctrl.id + "'! Available routes for this controller: ");
-				for (var i = 0; i < routes.length; i++) {
-					var debugRoute = routes[i];
+				for (var i = 0; i < ctrlRoutes.length; i++) {
+					var debugRoute = ctrlRoutes[i];
 					console.error("    ", debugRoute.path);
 				}
 				console.error("RouteParams used to match available Controller routes:", options.routeParams);
@@ -328,16 +343,16 @@ define(function (require) {
 			return hash;
 		},
 		findRoutesForCtrl: function (module) {
-			var routes = [];
+			var result = [];
 			var moduleId = module.id;
-			for (var i = 0; i < router.routes.length; i++) {
+			for (var i = 0; i < routes.length; i++) {
 
-				var route = router.routes[i];
+				var route = routes[i];
 				if (moduleId === route.moduleId) {
-					routes.push(route);
+					result.push(route);
 				}
 			}
-			return routes;
+			return result;
 		},
 		testCtrlRoute: function (routePath, viewParams) {
 
@@ -372,10 +387,10 @@ define(function (require) {
 			options = options || {};
 
 			var routeToLoad = null;
-			for (var i = 0; i < router.routes.length; i++) {
-				//for (var i in router.routes) {
-				//if (router.routes.hasOwnProperty(i)) {
-				var route = router.routes[i];
+			for (var i = 0; i < routes.length; i++) {
+				//for (var i in routes) {
+				//if (routes.hasOwnProperty(i)) {
+				var route = routes[i];
 
 				options.route = route;
 				// TODO: Should speed up lookup of routes to a map?
@@ -860,11 +875,11 @@ define(function (require) {
 			return hash;
 		}
 	};
-	
+
 	function resolveUnknownRoutes() {
 		var deferred = $.Deferred();
 		var promise = deferred.promise();
-		
+
 		var hashIndex = window.location.href.indexOf('#');
 
 		if (hashIndex === -1 || hashIndex === location.href.length - 1) {
@@ -873,7 +888,7 @@ define(function (require) {
 				throw new Error("Couldn't resolve the url, " + location.href + ", to a route. Please set the option 'kudu.defaultRoute' to render a default page!");
 			}
 			deferred.resolve(defaultRoute);
-			return promise;	
+			return promise;
 		}
 
 		var path = router.urlPath(window.location.href);

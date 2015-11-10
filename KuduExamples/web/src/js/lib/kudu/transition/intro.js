@@ -8,7 +8,7 @@ define(function (require) {
 		var deferred = $.Deferred();
 		var promise = deferred.promise();
 		
-		if (options.transitionsEnabled !== true) {
+		if (options.fx !== true) {
 			deferred.resolve();
 			return promise;
 		}

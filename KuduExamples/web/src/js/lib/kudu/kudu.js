@@ -38,9 +38,7 @@ define(function (require) {
 		// 
 		var reenableAnimationTracker = {enable: true};
 
-		var routes;
-
-		var routesByPath;
+		//var routes;
 
 		var currentMVC = {
 			view: null,
@@ -61,14 +59,9 @@ define(function (require) {
 		that.init = function (options) {
 			initOptions = options;
 			viewFactory = options.viewFactory;
-			routes = initOptions.routes || {};
-			routesByPath = {};
-			setupRoutesByPaths(routes);
-			router.addRoutes(routes);
-
-			for (var prop in routes) {
-				routesByPath[routes[prop]] = prop;
-			}
+			//routes = initOptions.routes || {};
+			//setupRoutesByPaths(routes);
+			//router.addRoutes(routes);
 
 			router.on('routeload', function (routeOptions) {
 				that.routeLoaded(routeOptions);
@@ -77,6 +70,7 @@ define(function (require) {
 			setupDefaultViewEvents(options);
 
 			router.init({
+				routes: initOptions.routes,
 				defaultRoute: options.defaultRoute,
 				unknownRouteResolver: options.unknownRouteResolver
 			});
@@ -85,27 +79,15 @@ define(function (require) {
 		that.route = function (options) {
 			router.go(options);
 		};
-
+/*
 		that.addRoute = function (route) {
 			routes[route.path] = route.moduleId;
 			that.addRouteByPath(route);
 			//router.addRouteAt(0, route); TODO
-		};
-
-		that.addRouteByPath = function (route) {
-			routesByPath[route.moduleId] = route.path;
-		};
+		};*/
 
 		that.getDefaultTarget = function () {
 			return initOptions.target;
-		};
-
-		that.getRoutes = function () {
-			return routes;
-		};
-
-		that.getRoutesByPath = function () {
-			return routesByPath;
 		};
 
 		that.routeLoaded = function (options) {
@@ -368,7 +350,7 @@ define(function (require) {
 				duration: 'fast',
 				target: options.target,
 				intro: initOptions.intro,
-				transitionsEnabled: initOptions.transitionsEnabled || false
+				fx: initOptions.fx || false
 			};
 
 			if (currentMVC.ctrl == null) {
@@ -398,7 +380,7 @@ define(function (require) {
 				duration: 100,
 				target: options.target,
 				outro: initOptions.outro, 
-				transitionsEnabled: initOptions.transitionsEnabled || false
+				fx: initOptions.fx || false
 			};
 
 			if (currentMVC.ctrl == null) {
@@ -779,6 +761,7 @@ define(function (require) {
 			}, 350);
 		}
 
+/*
 		function setupRoutesByPaths(routes) {
 			for (var key in routes) {
 				if (routes.hasOwnProperty(key)) {
@@ -786,7 +769,7 @@ define(function (require) {
 					that.addRouteByPath(route);
 				}
 			}
-		}
+		}*/
 
 		function viewFailed(options, errorArray) {
 			var errors = errorArray;
