@@ -11,7 +11,7 @@ define(function (require) {
 	function routes() {
 
 		var homeRoute = {path: 'home',
-			moduleId: home.id,
+			ctrl: home,
 			enter: function (args) {
 				var deferred = $.Deferred();
 				var promise = deferred.promise();

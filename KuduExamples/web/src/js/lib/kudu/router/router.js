@@ -137,6 +137,14 @@ define(function (require) {
 		},
 		addRoute: function (route) {
 			routes.push(route);
+
+			if (route.moduleId == null) {
+				if (route.ctrl == null) {
+					throw new Error("route must have a ctrl or moduleId defined!");
+				}
+
+				route.moduleId = route.ctrl.id;
+			}
 			router.addRouteByPath(route);
 			return router;
 		},
