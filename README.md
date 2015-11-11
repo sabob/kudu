@@ -1,28 +1,3 @@
-NEW router
-
-router.addRoute(
-    path: "/path", {
-     ctrl: HomeCtrl, //either specify ctrl or moduleId
-     // moduleId: "/app/ctrl/Home",
-    enter: function(view, oldView, ctrl, prevCtrl) {}, // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
-    leave: function(view, oldView, ctrl, prevCtrl) {}  // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
-})
-
-Ctrl: {
-  onInit (options)
-  onRemove (options)
-}
-
-order of calls when URL changes
-oldRoute is stored
-route = router.getRoutre("path");
-ctrl = route.ctrl
-prevCtrl.onRemove
-view = ctrl.onInit
-oldRoute.leave(view, prevView); // if "leave" callback not implemented we do fadeOut and unrender/remove automatically
-route.enter(view, prevView); // if "enter" callback not implemented we do render/insert and fadeIn automatically
-
-
 # Welcome to Kudu
 
 Kudu is a micro MVC framework centered around AMD module loading and Ractive template binding.
@@ -72,9 +47,9 @@ var notFoundCtrl = require("notFoundCtrl");
 
     // Specify the routes
     var routes = {
-        home: {path: 'home', moduleId: homeCtrl.id}
-        person: {path: 'person', moduleId: personCtrl.id}
-        notFound: {path: '*', moduleId: notFound.id}
+        home: {path: 'home', ctrl: homeCtrl}
+        person: {path: 'person', ctrl: personCtrl}
+        notFound: {path: '*', ctrl: notFound}
     };
     options.routes = routes;
 
@@ -84,6 +59,67 @@ var notFoundCtrl = require("notFoundCtrl");
         routes: routes,
         fx: true
 });
+
+Router
+------
+Kudu includes a router that maps url paths to controllers.
+
+The application routes are specified as an object with key/value pairs where each key is the name of the route and the value is the route.
+
+For example:
+
+var routes = {
+			home: {path: '/home', ctrl: customer},
+			customer: {path: '/customer', ctrl: customer},
+			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url, the route defined as, '*', will match and it's controller invoked.
+		};
+
+kudu.init({
+    target: "#container",
+    routes: routes;
+});
+
+Routes consist of the following options:
+
+{
+    path: this is the url path to match
+    ctrl: if the path matches a url, this controller will be instantiated, alternatively specify the 'moduleId' option for lazy loading of the controller
+    moduleId: if the path matches a url, the controller with this ID will be instantiated, alternatively specify the 'ctrl' option for eager loading of the controller
+    enter: a function for manually adding the view to the DOM and to perform custom intro animations. By default kudu insert views into the default target
+    leave: a function for manually removing the view from the DOM and to perform custom outro animations. By default kudu remove views from the default target
+}
+
+New routes can also be added to router through the __addRoute__ method.
+
+{{{
+var router = require("kudu/router/router");
+
+router.addRoute(
+    path: "/path", {
+     ctrl: HomeCtrl, //either specify ctrl or moduleId
+     // moduleId: "/app/ctrl/Home",
+    enter: function(view, prevView, ctrl, prevCtrl) {}, // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
+    leave: function(view, prevView, ctrl, prevCtrl) {}  // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
+});
+}}}
+
+Ctrl: {
+  onInit (options)
+  onRemove (options)
+}
+
+Process flow
+------------
+
+Here is order of calls when URL changes
+prevRoute is stored
+route = router.getRoute("path");
+ctrl = route.ctrl
+prevCtrl.onRemove
+view = ctrl.onInit
+prevRoute.leave(view, prevView); // if "leave" callback not implemented we do fadeOut and unrender/remove automatically
+route.enter(view, prevView); // if "enter" callback not implemented we do render/insert and fadeIn automatically
+
 
 Controller
 ----------
@@ -175,7 +211,7 @@ Global event options
 The following options are passed to the events:
 
 options = {
-    oldCtrl     : old controller which is being removed
+    prevCtrl     : previous controller which is being removed
     newCtrl     : new controller being added
     isMainCtrl  : (experimental) true if the new controller replaces the main view eg the target specified in kudu initialization is replaced. If false
                   it means the new controller is a sub view on another controller

@@ -119,7 +119,7 @@ define(function (require) {
 		// router.addRoutes(routes) - Register routes
 		//
 		// This will add the routes to the existing routes. Specifying a route with the same name as an existing route will
-		// overwrite the old route with the new one.
+		// overwrite the previous route with the new one.
 		//
 		// Example
 		// router.addRoutes({
