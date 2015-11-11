@@ -12,20 +12,20 @@ define(function (require) {
 
 		var homeRoute = {path: 'home',
 			ctrl: home,
-			enter: function (args) {
+			enter: function (options) {
 				var deferred = $.Deferred();
 				var promise = deferred.promise();
-				args.view.render(args.target);
+				options.view.render(options.target);
 				//$(args.target).show();
 //				$(args.target).fadeIn(1000, function () {
 //					deferred.resolve();
 //				});
 				//return promise;
 			},
-			leave: function (args) {
+			leave: function (options) {
 				var deferred = $.Deferred();
 				var promise = deferred.promise();
-				args.prevView.unrender(args.target);
+				options.prevView.unrender(options.target);
 //				$(args.target).fadeOut(1000, function () {
 //					args.prevView.unrender(args.target);
 //					deferred.resolve();
