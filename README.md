@@ -37,7 +37,7 @@ which specifies which URLs map to which Controller.
 Here is an example setup.js file showing how to setup and create a kudu instance:
 
 ```javascript
-    var kudu = require("kudu");
+var kudu = require("kudu");
 // Import some controllers
 var homeCtrl = require("homeCtrl");
 var personCtrl = require("personCtrl");
@@ -69,6 +69,7 @@ The application routes are specified as an object with key/value pairs where eac
 
 For example:
 
+```javascript
 var routes = {
 			home: {path: '/home', ctrl: customer},
 			customer: {path: '/customer', ctrl: customer},
@@ -79,9 +80,11 @@ kudu.init({
     target: "#container",
     routes: routes;
 });
+```
 
 Routes consist of the following options:
 
+```
 {
     path: this is the url path to match
     ctrl: if the path matches a url, this controller will be instantiated, alternatively specify the 'moduleId' option for lazy loading of the controller
@@ -89,10 +92,11 @@ Routes consist of the following options:
     enter: a function for manually adding the view to the DOM and to perform custom intro animations. By default kudu insert views into the default target
     leave: a function for manually removing the view from the DOM and to perform custom outro animations. By default kudu remove views from the default target
 }
+```
 
 New routes can also be added to router through the __addRoute__ method.
 
-{{{
+```javascript
 var router = require("kudu/router/router");
 
 router.addRoute(
@@ -102,12 +106,7 @@ router.addRoute(
     enter: function(view, prevView, ctrl, prevCtrl) {}, // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
     leave: function(view, prevView, ctrl, prevCtrl) {}  // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
 });
-}}}
-
-Ctrl: {
-  onInit (options)
-  onRemove (options)
-}
+```
 
 Process flow
 ------------
@@ -129,6 +128,7 @@ to a Ractive View instance.
 
 Example controller:
 
+```javascript
     define(function (require) {
 
         var template = require("rvc!./home");
@@ -147,6 +147,7 @@ Example controller:
         }
         return homeCtrl;
     });
+```
 
 In the home controller above the onInit function is implemented. onInit receives an "options" object and must return the view.
 
@@ -194,10 +195,12 @@ Gobal events
 
 You can subscribe to global events fired by kudu as follows:
 
+```javascript
 var kudu = require("kudu/kudu");
 $(kudu).on('viewInit', function (e, options) {
     // called whenever a view has been initialized
-	});
+});
+```
 	
 The following global events exist:
 viewBeforeInit     : called before the controller.onInit method is called
@@ -231,6 +234,7 @@ onUnrender : called after the view has been removed from the DOM
 Example:
 --------
 
+```javascript
 define(function (require) {
 
         var template = require("rvc!./home");
@@ -257,6 +261,7 @@ define(function (require) {
         }
         return homeCtrl;
     });
+```
 
 Routing
 -------
