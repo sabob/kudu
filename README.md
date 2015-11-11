@@ -36,8 +36,8 @@ which specifies which URLs map to which Controller.
 
 Here is an example setup.js file showing how to setup and create a kudu instance:
 
+```javascript
     var kudu = require("kudu");
-
 // Import some controllers
 var homeCtrl = require("homeCtrl");
 var personCtrl = require("personCtrl");
@@ -59,6 +59,7 @@ var notFoundCtrl = require("notFoundCtrl");
         routes: routes,
         fx: true
 });
+```
 
 Router
 ------
