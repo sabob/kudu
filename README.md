@@ -13,6 +13,7 @@ Setup
 
 Create a web project with the following structure:
 
+```
 web
     src
         index.jsp
@@ -25,6 +26,7 @@ web
                 kudu
                     kudu files
             config.js
+```
 
 Kudu
 ----
