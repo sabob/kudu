@@ -86,13 +86,13 @@ kudu.init({
 
 Routes consist of the following options:
 
-```
+```javascript
 {
-    path: this is the url path to match
-    ctrl: if the path matches a url, this controller will be instantiated, alternatively specify the 'moduleId' option for lazy loading of the controller
-    moduleId: if the path matches a url, the controller with this ID will be instantiated, alternatively specify the 'ctrl' option for eager loading of the controller
-    enter: a function for manually adding the view to the DOM and to perform custom intro animations. By default kudu insert views into the default target
-    leave: a function for manually removing the view from the DOM and to perform custom outro animations. By default kudu remove views from the default target
+    path:     // this is the url path to match
+    ctrl:     // if the path matches a url, this controller will be instantiated, alternatively specify the 'moduleId' option for lazy loading of the controller
+    moduleId: // if the path matches a url, the controller with this ID will be instantiated, alternatively specify the 'ctrl' option for eager loading of the controller
+    enter:    // a function for manually adding the view to the DOM and to perform custom intro animations. By default kudu insert views into the default target
+    leave:    // a function for manually removing the view from the DOM and to perform custom outro animations. By default kudu remove views from the default target
 }
 ```
 
