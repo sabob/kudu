@@ -122,7 +122,7 @@ options contain the following:
     route: the route object to create a new view for
     routeParams: the URL parameters
     target: the CSS selector where the view must be rendered to
-    viewOrPromise: an object that was returned from the controller's onInit() function, either a view or a promise that resolves to a view
+    viewOrPromise: an object that was returned from the controller onInit() function, either a view or a promise that resolves to a view
 };
 ```
 
