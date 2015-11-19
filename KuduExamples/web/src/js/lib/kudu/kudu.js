@@ -50,15 +50,21 @@ define(function (require) {
 
 		var callstack = [];
 
-		var initOptions = null;
-
-		var viewFactory = null;
+		var initOptions = {
+			target: null,
+			routes: null,
+			defaultRoute: null,
+			unknownRouteResolver: null,
+			intro: null,
+			outro: null,
+			fx: false,
+			viewFactory: null
+		};
 
 		var ajaxTracker = ajaxTrackerFn(that);
 
 		that.init = function (options) {
 			initOptions = options;
-			viewFactory = options.viewFactory;
 			//routes = initOptions.routes || {};
 			//setupRoutesByPaths(routes);
 			//router.addRoutes(routes);
@@ -373,7 +379,7 @@ define(function (require) {
 			var outroOptions = {
 				duration: 100,
 				target: options.target,
-				outro: initOptions.outro, 
+				outro: initOptions.outro,
 				fx: initOptions.fx || false
 			};
 
@@ -602,8 +608,8 @@ define(function (require) {
 		that.createView = function (options) {
 
 			var promise;
-			if (viewFactory != null && viewFactory.createView) {
-				var promise = viewFactory.createView(options);
+			if (initOptions.viewFactory != null && initOptions.viewFactory.createView) {
+				var promise = initOptions.viewFactory.createView(options);
 			} else {
 				promise = createView(options);
 			}
@@ -617,8 +623,8 @@ define(function (require) {
 			//options.view.transitionsEnabled = false;
 
 			var renderPromise;
-			if (viewFactory != null && viewFactory.renderView) {
-				renderPromise = viewFactory.renderView(options);
+			if (initOptions.viewFactory != null && initOptions.viewFactory.renderView) {
+				renderPromise = initOptions.viewFactory.renderView(options);
 			} else {
 				renderPromise = renderView(options);
 			}
@@ -675,8 +681,8 @@ define(function (require) {
 
 				//options.mvc.view.transitionsEnabled = false;
 				var promise;
-				if (viewFactory != null && viewFactory.unrenderView) {
-					var promise = viewFactory.unrenderView(options);
+				if (initOptions.viewFactory != null && initOptions.viewFactory.unrenderView) {
+					var promise = initOptions.viewFactory.unrenderView(options);
 				} else {
 					promise = unrenderView(options);
 				}
@@ -755,15 +761,15 @@ define(function (require) {
 			}, 350);
 		}
 
-/*
-		function setupRoutesByPaths(routes) {
-			for (var key in routes) {
-				if (routes.hasOwnProperty(key)) {
-					var route = routes[key];
-					that.addRouteByPath(route);
-				}
-			}
-		}*/
+		/*
+		 function setupRoutesByPaths(routes) {
+		 for (var key in routes) {
+		 if (routes.hasOwnProperty(key)) {
+		 var route = routes[key];
+		 that.addRouteByPath(route);
+		 }
+		 }
+		 }*/
 
 		function viewFailed(options, errorArray) {
 			var errors = errorArray;

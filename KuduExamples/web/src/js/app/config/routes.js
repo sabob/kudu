@@ -36,8 +36,8 @@ define(function (require) {
 
 		var routes = {
 			home: homeRoute,
-			customer: {path: '/customer', moduleId: customer.id},
-			notFound: {path: '*', moduleId: notFound.id}
+			customer: {path: '/customer', ctrl: customer},
+			notFound: {path: '*', ctrl: notFound}
 		};
 
 		Ractive.defaults.debug = true;

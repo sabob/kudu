@@ -1,12 +1,13 @@
 # Welcome to Kudu
 
-Kudu is a micro MVC framework centered around AMD module loading and Ractive template binding.
+Kudu is a micro MVC framework centered around AMD modules and Ractive templates.
 
-kudu provides a router to map between URLs and controllers. Controller are essentially AMD modules with a well defined life-cycle consisting
+kudu provides a router for mapping URLs to controllers. Controllers are essentially AMD modules with a well defined life-cycle consisting
 of an "initialization" phase, "rendering" phase and finally a "remove" phase. AMD modules can partake in these phases by implementing the
 appropriate method such as "onInit", "onRender", "onRemove" etc.
 
-Each controller has an associated View template which is bound to the controller. The View and binding is handled by a Ractive instance.
+Each controller has an associated View and Model. The View is a Ractive instance that binds to the Model. The Model is a plain javascript
+object generally fetched as data from the server.
 
 Setup
 -----
@@ -33,13 +34,16 @@ Kudu
 
 The kudu module is a facade for the framework and most interaction with the framework is handled by the kudu module.
 
-A new kudu instance is initialized by passing in a "target", an element ID where views will be rendered, and a "route" object 
-which specifies which URLs map to which Controller.
+There is one kudu instance per application.
+
+A new kudu instance is initialized by passing in a "target", an element ID where views will be rendered, and a "routes" object 
+which specifies which URLs map to which Controllers.
 
 Here is an example setup.js file showing how to setup and create a kudu instance:
 
 ```javascript
 var kudu = require("kudu");
+
 // Import some controllers
 var homeCtrl = require("homeCtrl");
 var personCtrl = require("personCtrl");
@@ -58,10 +62,98 @@ var notFoundCtrl = require("notFoundCtrl");
 // Initialize kudu with the given routes and a target id (#someId) where the views will be rendered to
     kudu.init({
         target: "#container",
-        routes: routes,
-        fx: true
+        routes: routes
 });
 ```
+
+Kudu options
+------------
+
+Kudu.init() accepts the following options:
+
+```javascript
+options = {
+			target: // a CSS id selector specifying the DOM node where Views will be rendered to eg "#container",
+			routes: // an object mapping URLs to Controller modules,
+			defaultRoute: // the default route to load if no URL is specified eg. http://host/
+			unknownRouteResolver: // a function that is called if none of the registered routes matches the URL,
+			intro: // a function for performing animations when showing the View,
+			outro: // a function for performing animations when removing the View,
+			fx: // Specify weather effects and animations should be enabled or not, default is false,
+			viewFactory: // Provides a hook for creating views other than Ractive instances. See ViewFactory section below
+		};
+```
+
+unknownRouteResolver
+--------------------
+An optional function passed a kudu instance that is called if none of the registered routes matches the URL. This allows users to inject
+custom logic to handle this situation.
+
+The function must return a promise which resolves to a route. If the promise is rejected the "notFound" route will be used.
+
+ViewFactory
+-----------
+
+A ViewFactory provides global hooks for cretaing, rendering and unrendering views from the DOM.
+
+A custom ViewFactory must provide three functions:
+
+```javascript
+var CustomFactory = {
+
+    createView: function(options) {
+        return promise;
+    }
+
+    renderView: function(options) {
+        return promise;
+    }
+
+    unrenderView: function(options) {
+        return promise;
+    }
+}
+
+options contain the following:
+	var options = {
+    args: an object that was passed to a new view from the current view
+    ctrl: the controller to create
+    mvc: the current view/controller instance
+    route: the route object to create a new view for
+    routeParams: the URL parameters
+    target: the CSS selector where the view must be rendered to
+    viewOrPromise: an object that was returned from the controller's onInit() function, either a view or a promise that resolves to a view
+};
+```
+
+_createView_ must return a promise that resolves to the new view instance. This view instance will be passed to the _renderView_ function
+
+_renderView_ must return a promise that resolves once the view has been rendered to the DOM.
+
+_unrenderView_ must return a promise that resolves once the view has been removed from the DOM.
+
+intro / outro
+-------------
+These functions provides global hooks for performing animation when showing and hiding views. These functions will be invoked whenever a
+view is rendered and unrendered. Note: you can also provide fune grained animations on a per view basis by providing enter/leave functions
+in the _route_ object.
+
+intro is called after the view is rendered to the DOM. Here you can provide animations on the view eg. fade the view in
+
+outro is called before the view is removed from the DOM. Here you can provide animations on the view eg. fade the view out
+
+The functions have the following format:
+```javascript
+var intro = function (options, done) {
+}
+```
+
+options contain the following value:
+options: {
+				target: // the CSS selector where the view was rendered to,
+};
+
+The "done" argument is a function to be called once the animation is finished to let kudu know the view is complete.
 
 Router
 ------
@@ -83,6 +175,9 @@ kudu.init({
     routes: routes;
 });
 ```
+
+Routes
+------
 
 Routes consist of the following options:
 
