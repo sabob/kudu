@@ -79,12 +79,6 @@ define(function (require) {
 		that.route = function (options) {
 			router.go(options);
 		};
-/*
-		that.addRoute = function (route) {
-			routes[route.path] = route.moduleId;
-			that.addRouteByPath(route);
-			//router.addRouteAt(0, route); TODO
-		};*/
 
 		that.getDefaultTarget = function () {
 			return initOptions.target;

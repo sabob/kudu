@@ -208,6 +208,7 @@ define(function (require) {
 			if (options.updateRoute === false) {
 				var tempRoute = {};
 				tempRoute.moduleId = moduleId;
+				tempRoute.ctrl = ctrl;
 				options.route = tempRoute;
 
 				var newHash = router.hashPath(currentHash);
@@ -244,7 +245,7 @@ define(function (require) {
 			// Set routePath, if route is null use moduleId
 			var routePath = route != null ? route.path : moduleId;
 
-			// TODO instead of throwing error for unsupported paths, we could remove the hash from ythe url and still render the Controller
+			// TODO instead of throwing error for unsupported paths, we could remove the hash from the url and still render the Controller
 			if (routePath instanceof RegExp) {
 				throw new Error("Cannot route to controller '" + ctrl.id + "' since it's route path is a RegExp '" + routePath + "'");
 			}
@@ -356,8 +357,16 @@ define(function (require) {
 			for (var i = 0; i < routes.length; i++) {
 
 				var route = routes[i];
-				if (moduleId === route.moduleId) {
-					result.push(route);
+				if (moduleId == null || route.moduleId == null) {
+					if (module === route.ctrl) {
+						result.push(route);
+					}
+
+				} else {
+					if (moduleId === route.moduleId) {
+						result.push(route);
+					}
+
 				}
 			}
 			return result;
@@ -469,35 +478,23 @@ define(function (require) {
 
 			// Load the route's module
 			console.log("route", route);
-			require([route.moduleId], function (module) {
-				// Register newly discovered routes
-				if (route.isNew) {
-					delete route.isNew;
-					router.addRouteAt(0, route);
-				}
-				// Make sure this is still the active route from when loadCurrentRoute was called. The asynchronous nature
-				// of AMD loaders means we could have fireed multiple hashchanges or popstates before the AMD module finished
-				// loading. If we navigate to route /a then navigate to route /b but /b finishes loading before /a we don't
-				// want /a to be rendered since we're actually at route /b.
-				if (route.active) {
 
-					// Check if routeParams has been cached for this request, otherwise cache it for this request in the options
-					var urlParams = options.urlParams;
-					if (urlParams == null) {
-						urlParams = router.routeArguments(route, window.location.href);
-						options.urlParams = urlParams;
-					}
-					var routerOptions = {
-						routeParams: urlParams,
-						module: module,
-						args: options.args,
-						route: route
-					};
-					router.fire('routeload', routerOptions);
-				}
-			}, function () {
-				//console.error(arguments);
-			});
+			if (route.ctrl == null) {
+
+				require([route.moduleId], function (module) {
+
+					router.processLoadedModule(options, module, route);
+
+				}, function () {
+					//console.error(arguments);
+				});
+
+			} else {
+				router.processLoadedModule(options, route.ctrl, route);
+
+
+			}
+
 		},
 		// urlPath(url) - Parses the url to get the path
 		//
@@ -543,6 +540,34 @@ define(function (require) {
 			cachedUrlPaths[url] = path;
 
 			return path;
+		},
+		processLoadedModule: function (options, module, route) {
+
+			// Register newly discovered routes
+			if (route.isNew) {
+				delete route.isNew;
+				router.addRouteAt(0, route);
+			}
+			// Make sure this is still the active route from when loadCurrentRoute was called. The asynchronous nature
+			// of AMD loaders means we could have fireed multiple hashchanges or popstates before the AMD module finished
+			// loading. If we navigate to route /a then navigate to route /b but /b finishes loading before /a we don't
+			// want /a to be rendered since we're actually at route /b.
+			if (route.active) {
+
+				// Check if routeParams has been cached for this request, otherwise cache it for this request in the options
+				var urlParams = options.urlParams;
+				if (urlParams == null) {
+					urlParams = router.routeArguments(route, window.location.href);
+					options.urlParams = urlParams;
+				}
+				var routerOptions = {
+					routeParams: urlParams,
+					module: module,
+					args: options.args,
+					route: route
+				};
+				router.fire('routeload', routerOptions);
+			}
 		},
 		// router.testRoute(route, [url]) - Test if the route matches the current URL
 		//
@@ -908,6 +933,7 @@ define(function (require) {
 		require([path], function (module) {
 			var newRoute = {
 				path: path,
+				ctrl: module,
 				moduleId: path
 			};
 			deferred.resolve(newRoute);
