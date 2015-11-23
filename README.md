@@ -73,7 +73,7 @@ Kudu.init() accepts the following options:
 
 ```javascript
 options = {
-			target: // a CSS id selector specifying the DOM node where Views will be rendered to eg "#container",
+			target: // a CSS id selector specifying the DOM node where Views will be rendered to, eg. "#container",
 			routes: // an object mapping URLs to Controller modules,
 			defaultRoute: // the default route to load if no URL is specified eg. http://host/
 			unknownRouteResolver: // a function that is called if none of the registered routes matches the URL,
@@ -81,6 +81,7 @@ options = {
 			outro: // a function for performing animations when removing the View,
 			fx: // Specify weather effects and animations should be enabled or not, default is false,
 			viewFactory: // Provides a hook for creating views other than Ractive instances. See ViewFactory section below
+      debug: // specify debug mode, true or false. Default is true
 		};
 ```
 
@@ -94,7 +95,7 @@ The function must return a promise which resolves to a route. If the promise is 
 ViewFactory
 -----------
 
-A ViewFactory provides global hooks for cretaing, rendering and unrendering views from the DOM.
+A ViewFactory provides global hooks for creating, rendering and unrendering views from the DOM.
 
 A custom ViewFactory must provide three functions:
 
@@ -114,7 +115,7 @@ var CustomFactory = {
     }
 }
 
-options contain the following:
+The above function accepts options consisting of the following:
 	var options = {
     args: an object that was passed to a new view from the current view
     ctrl: the controller to create
@@ -138,9 +139,9 @@ These functions provides global hooks for performing animation when showing and 
 view is rendered and unrendered. Note: you can also provide fune grained animations on a per view basis by providing enter/leave functions
 in the _route_ object.
 
-intro is called after the view is rendered to the DOM. Here you can provide animations on the view eg. fade the view in
+_intro_ is called after the view is rendered to the DOM. Here you can provide animations on the view eg. fade the view in
 
-outro is called before the view is removed from the DOM. Here you can provide animations on the view eg. fade the view out
+_outro_ is called before the view is removed from the DOM. Here you can provide animations on the view eg. fade the view out
 
 The functions have the following format:
 ```javascript
@@ -149,9 +150,11 @@ var intro = function (options, done) {
 ```
 
 options contain the following value:
+```javascript
 options: {
 				target: // the CSS selector where the view was rendered to,
 };
+```
 
 The "done" argument is a function to be called once the animation is finished to let kudu know the view is complete.
 
@@ -159,7 +162,8 @@ Router
 ------
 Kudu includes a router that maps url paths to controllers.
 
-The application routes are specified as an object with key/value pairs where each key is the name of the route and the value is the route.
+The application routes are specified as an object with key/value pairs where each key is the name of the route and the value is the route
+itself, which consists of a url _path_ and _controller_.
 
 For example:
 
@@ -167,7 +171,7 @@ For example:
 var routes = {
 			home: {path: '/home', ctrl: customer},
 			customer: {path: '/customer', ctrl: customer},
-			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url, the route defined as, '*', will match and it's controller invoked.
+			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url, the route defined as, '*', will match and it's controller instantiated.
 		};
 
 kudu.init({
@@ -191,37 +195,114 @@ Routes consist of the following options:
 }
 ```
 
-New routes can also be added to router through the __addRoute__ method.
+New routes can also be added to router through router.__addRoute()__.
 
 ```javascript
 var router = require("kudu/router/router");
 
 router.addRoute(
     path: "/path", {
-     ctrl: HomeCtrl, //either specify ctrl or moduleId
-     // moduleId: "/app/ctrl/Home",
-    enter: function(view, prevView, ctrl, prevCtrl) {}, // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
-    leave: function(view, prevView, ctrl, prevCtrl) {}  // options {ctrl, prevCtrl, route, prevRoute, view, prevView, target}
+     ctrl: HomeCtrl
 });
 ```
 
-Process flow
-------------
+Enter
+-----
+When navigating between views, Kudu will remove the current view from the DOM and then add the new view to the DOM. If kudu is created with
+the _fx_ option set to _true_, Kudu will animate the transition between views, by fading out the current view, remove it from the DOM, add
+the new view to the DOM, and finally fading in the new view.
 
-Here is order of calls when URL changes
-prevRoute is stored
-route = router.getRoute("path");
-ctrl = route.ctrl
-prevCtrl.onRemove
-view = ctrl.onInit
-prevRoute.leave(view, prevView); // if "leave" callback not implemented we do fadeOut and unrender/remove automatically
-route.enter(view, prevView); // if "enter" callback not implemented we do render/insert and fadeIn automatically
+You can customize this behaviour through a custom ViewFactory implementation and _intro_, _outro_ functions that is passed to the new Kudu
+instance.
 
+For finer grained control over the creation of views, you can provide an _enter_ function on a per route basis. When providing an _enter_
+function, Kudu will delegate the rendering and animation of the view to that function.
+
+The _enter_ function can return a Promise instance in order to perform animations on the view. Kudu will wait until the promise resolves
+before continuing with other work.
+
+Example enter function:
+
+```javascript
+
+var route: {
+    path: "/home",
+    ctrl: HomeController,
+    enter: function(options) {
+        var d = $.deferred();
+
+        options.view.render(options.target); // Append view to DOM
+
+        $(options.target).slidDown(function() { // Use jQuery to slide the view down
+            d.resolve(); // Resolve the promise to notify Kudu that the view is complete
+        });
+
+        return d.promise();
+    }
+}
+```
+
+Enter accepts the following options: 
+
+```javascript
+var options = {
+    ctrl:       // the new controller instance
+    prevCtrl:   // the previous controller instance
+    view:       // the new view instance
+    prevView:   // the previous view instance
+    route:      // the new route instance
+    prevRoute:  // the previous route instance
+    target:     // the default DOM target as passed to the Kudu instance
+};
+```
+
+Leave
+-----
+Similar to the _enter_ function _, but _leave_ provides finer grained control to remove the view from the DOM and animate it.
+
+When providing a _leave_ function, Kudu will delegate the unrendering and animation of the view to that function.
+
+The _leave_ function can return a Promise instance in order to perform animations on the view. Kudu will wait until the promise resolves
+before continuing with other work.
+
+Example leave function:
+
+```javascript
+
+var route: {
+    path: "/home",
+    ctrl: HomeController,
+    leave: function(options) {
+        var d = $.deferred();
+
+        $(options.target).slidUp(function() { // Use jQuery to slide the view up
+            options.view.unrender(options.target); // Remove view from the DOM
+            d.resolve(); // Resolve the promise to notify Kudu that the view is complete
+        });
+
+        return d.promise();
+    }
+}
+```
+
+Leave accepts the following options: 
+
+```javascript
+var options = {
+    ctrl:       // the new controller instance
+    prevCtrl:   // the previous controller instance
+    view:       // the new view instance
+    prevView:   // the previous view instance
+    route:      // the new route instance
+    prevRoute:  // the previous route instance
+    target:     // the default DOM target as passed to the Kudu instance
+};
+```
 
 Controller
 ----------
 Controllers are AMD modules that must implement an "onInit" function which returns a Ractive View instance or a Promise which resolves
-to a Ractive View instance.
+to a Ractive View. (Provide a custom ViewFactory to handle different types of views eg. an HTML view).
 
 Example controller:
 
@@ -246,15 +327,14 @@ Example controller:
     });
 ```
 
-In the home controller above the onInit function is implemented. onInit receives an "options" object and must return the view.
+In the home controller above, the onInit function is implemented. onInit receives an _options_ object and must return the view.
 
-In kudu the views are Ractive instances, consisting of an HTML template and data. Ractive binds the HTML template and data to form the view.
+In Kudu, views are Ractive instances, consisting of an HTML template and data. Ractive binds the HTML template and data to form the view.
 
-The onInit function of a controller must return a Ractive instance or a promise which resolves to a Ractive instance.
+onInit must return a Ractive instance (the view) or a promise which resolves to a Ractive instance.
 
 The Ractive HTML template is imported as an AMD module through the "rvc" plugin. This plugin transforms an HTML Ractive template by compiling
-it to a Ractive function ready to be instantiated.
-
+it to a Ractive function, ready to be instantiated.
 
 onInit
 ------
@@ -267,21 +347,24 @@ onInit options
 
 The following options are passed to the onInit method:
 
+```javascript
 options = {
-  ajaxTracker: provides a means of registering ajax calls in the controller. Ajax calls tracked this way will automatically abort when the view
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls tracked this way will automatically abort when the view
 is removed. ajaxTracker also provides a way to listen to ajax lifecycle events such as ajax.start / ajax.stop etc.
 
-routeParams: all URL parameters (including segment parameters and query parameters) are passed to the controller through the routeParams object.
-args: arguments passed to the controller from another controller. args can only be passed to a view when called from a controller, not when navigating via the URL hash
+routeParams:   // all URL parameters (including segment parameters and query parameters) are passed to the controller through the routeParams object.
+args:          // arguments passed to the controller from another controller. args can only be passed to a view when called from a controller, not when navigating via the URL hash
 }
+```
 
 
 onRemove
 --------
 
-Controllers can optionally implement the onRemove method. This method controls whether the view can be removed or not. onRemove must return
+Controllers can optionally implement an _onRemove_ method. This method controls whether the view can be removed or not. onRemove must return
 either true or false or a promise that resolves to true or false.
-If onRemove returns true, the view will be removed. If false, the request will be cancelled and the view will not be removed.
+If onRemove returns true, the view will be removed. If false, the request will be cancelled and the view will not be removed. This is useful
+in situations where a view wants to stop the user from navigating away until changes in a form has been saved, as an example.
 
 onRemove options
 ----------------
@@ -365,7 +448,7 @@ Routing
 
 The following routing logic is supported:
 
-* Segment parameters are specified as a colon with a name eg: /person:id
+* Segment parameters are specified as a colon with a name eg: /person/:id
 The following url will match this route:
 /person/1
 

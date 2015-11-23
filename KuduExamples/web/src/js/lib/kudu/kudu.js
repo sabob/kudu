@@ -16,7 +16,7 @@ define(function (require) {
 
 	var router = require("./router/router");
 	var $ = require("jquery");
-	//var Ractive = require("ractive");
+	var Ractive = require("ractive");
 	var ajaxTrackerFn = require("./utils/ajaxTracker");
 	var simpleAjaxTrackerFn = require("./utils/simpleAjaxTracker");
 	var onInitHandler = require("./lifecycle/onInitHandler");
@@ -58,16 +58,16 @@ define(function (require) {
 			intro: null,
 			outro: null,
 			fx: false,
-			viewFactory: null
+			viewFactory: null,
+			debug: true
 		};
 
 		var ajaxTracker = ajaxTrackerFn(that);
 
 		that.init = function (options) {
-			initOptions = options;
-			//routes = initOptions.routes || {};
-			//setupRoutesByPaths(routes);
-			//router.addRoutes(routes);
+			$.extend(initOptions, options);
+			
+			  Ractive.DEBUG = initOptions.debug;
 
 			router.on('routeload', function (routeOptions) {
 				that.routeLoaded(routeOptions);
@@ -778,6 +778,18 @@ define(function (require) {
 			}
 			options.error = errors;
 			that.triggerEvent("viewFail", options);
+
+			if (initOptions.debug) {
+				if ($.isArray(options.error)) {
+					console.error(options.error[0], options);
+
+ 				} else if (typeof options.error === 'string') {
+						console.error(options.error, options);
+					
+				} else {
+					console.error("error occurred!", options);
+				}
+			}
 		}
 
 		function cancelCurrentRequest(options) {

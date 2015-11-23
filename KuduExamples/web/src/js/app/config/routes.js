@@ -10,28 +10,8 @@ define(function (require) {
 
 	function routes() {
 
-		var homeRoute = {path: 'home',
-			ctrl: home,
-			enter: function (options) {
-				var deferred = $.Deferred();
-				var promise = deferred.promise();
-				options.view.render(options.target);
-				//$(args.target).show();
-//				$(args.target).fadeIn(1000, function () {
-//					deferred.resolve();
-//				});
-				//return promise;
-			},
-			leave: function (options) {
-				var deferred = $.Deferred();
-				var promise = deferred.promise();
-				options.prevView.unrender(options.target);
-//				$(args.target).fadeOut(1000, function () {
-//					args.prevView.unrender(args.target);
-//					deferred.resolve();
-//				});
-				//return promise;
-			}
+		var homeRoute = {path: '/home',
+			ctrl: home
 		};
 
 		var routes = {
