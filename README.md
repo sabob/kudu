@@ -201,13 +201,10 @@ The following route mappings are supported:
 The following url will match this route:
 /person/1
 
-* Query parameters are specified as ampersand separated values after the questionmark eg: /person**?id&name**
-The following url will match this route:
-/person?id=1&name=bob
+* Query parameters are specified as ampersand separated values after the questionmark eg: _/person**?id&name**_. The following url will match
+this route: _/person?id=1&name=bob_
 
-* Wildcards are specified as an asterisk eg: /view/*/person
-The following url will match this route:
-/view/anything/person
+* Wildcards are specified as an asterisk eg: _/view/*****/person_. The following url will match this route: _/view/anything/person_
 
 Routes
 ------
