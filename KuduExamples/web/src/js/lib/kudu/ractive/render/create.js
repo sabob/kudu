@@ -1,8 +1,8 @@
 define(function (require) {
 
 	var $ = require("jquery");
-	var utils = require("../utils/utils");
-	var severity = require("../utils/severity");
+	var utils = require("../../utils/utils");
+	var severity = require("../../utils/severity");
 
 	function create(options) {
 

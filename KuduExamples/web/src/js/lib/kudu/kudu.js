@@ -25,9 +25,8 @@ define(function (require) {
 	var setupDefaultViewEvents = require("./ractive/setupDefaultEvents");
 	var introFn = require("./transition/intro");
 	var outroFn = require("./transition/outro");
-	var createView = require("./ractive/create");
-	var renderView = require("./ractive/render/render");
-	var unrenderView = require("./ractive/render/unrender");
+	var ractiveViewFactory = require("./ractive/RactiveViewFactory");
+	//var unrenderView = require("./ractive/render/unrender");
 	var severity = require("./utils/severity");
 	var utils = require("./utils/utils");
 
@@ -58,7 +57,7 @@ define(function (require) {
 			intro: null,
 			outro: null,
 			fx: false,
-			viewFactory: null,
+			viewFactory: ractiveViewFactory,
 			debug: true
 		};
 
@@ -66,6 +65,7 @@ define(function (require) {
 
 		that.init = function (options) {
 			$.extend(initOptions, options);
+			that.validateInitOptions(initOptions);
 			
 			  Ractive.DEBUG = initOptions.debug;
 
@@ -80,6 +80,21 @@ define(function (require) {
 				defaultRoute: options.defaultRoute,
 				unknownRouteResolver: options.unknownRouteResolver
 			});
+		};
+		
+		that.validateInitOptions = function(options) {
+			if (options.viewFactory == null) {
+				throw new Error("viewFactory cannot be null!");
+			}
+			if (options.viewFactory.createView == null) {
+				throw new Error("viewFactory must provide a createView function!");
+			}
+			if (options.viewFactory.renderView == null) {
+				throw new Error("viewFactory must provide a renderView function!");
+			}
+			if (options.viewFactory.unrenderView == null) {
+				throw new Error("viewFactory must provide an unrenderView function!");
+			}			
 		};
 
 		that.route = function (options) {
@@ -606,13 +621,7 @@ define(function (require) {
 		};
 
 		that.createView = function (options) {
-
-			var promise;
-			if (initOptions.viewFactory != null && initOptions.viewFactory.createView) {
-				var promise = initOptions.viewFactory.createView(options);
-			} else {
-				promise = createView(options);
-			}
+			var promise = initOptions.viewFactory.createView(options);
 			return promise;
 		};
 
@@ -622,12 +631,7 @@ define(function (require) {
 
 			//options.view.transitionsEnabled = false;
 
-			var renderPromise;
-			if (initOptions.viewFactory != null && initOptions.viewFactory.renderView) {
-				renderPromise = initOptions.viewFactory.renderView(options);
-			} else {
-				renderPromise = renderView(options);
-			}
+			var renderPromise = initOptions.viewFactory.renderView(options);
 
 			renderPromise.then(function () {
 
@@ -680,14 +684,9 @@ define(function (require) {
 			} else {
 
 				//options.mvc.view.transitionsEnabled = false;
-				var promise;
-				if (initOptions.viewFactory != null && initOptions.viewFactory.unrenderView) {
-					var promise = initOptions.viewFactory.unrenderView(options);
-				} else {
-					promise = unrenderView(options);
-				}
+				var unrenderPromise = initOptions.viewFactory.unrenderView(options);
 
-				promise.then(function () {
+				unrenderPromise.then(function () {
 					//options.mvc.view.unrender().then(function () {
 
 					that.unrenderViewCleanup(options).then(function () {
