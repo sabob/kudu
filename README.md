@@ -349,11 +349,14 @@ The following options are passed to the onInit method:
 
 ```javascript
 options = {
-  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls tracked this way will automatically abort when the view
-is removed. ajaxTracker also provides a way to listen to ajax lifecycle events such as ajax.start / ajax.stop etc.
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls tracked 
+               // this way will automatically abort when the view is removed. ajaxTracker also 
+               // provides a way to listen to ajax lifecycle events such as ajax.start / ajax.stop etc.
 
-routeParams:   // all URL parameters (including segment parameters and query parameters) are passed to the controller through the routeParams object.
-args:          // arguments passed to the controller from another controller. args can only be passed to a view when called from a controller, not when navigating via the URL hash
+routeParams:   // all URL parameters (including segment parameters and query parameters) are 
+               // passed to the controller through the routeParams object.
+args:          // arguments passed to the controller from another controller. args can only be 
+               // passed to a view when called from a controller, not when navigating via the URL hash
 }
 ```
 
@@ -387,8 +390,10 @@ The following global events exist:
 viewBeforeInit     : called before the controller.onInit method is called
 viewInit           : called after the controller.onInit method is called
 viewRender         : called after the controller's Ractive view has been added to the DOM
-viewComplete       : called after the controller's Ractive view has been rendered and completed any transitions
-viewBeforeUnrender : called before view is removed from the dom. this event only occurs if the Controller.onRemove method returns true
+viewComplete       : called after the controller's Ractive view has been rendered and completed 
+                     any transitions
+viewBeforeUnrender : called before view is removed from the dom. this event only occurs 
+                     if the Controller.onRemove method returns true
 viewUnrender       : called after the controller's Ractive view has been removed from the DOM
 ```
 
@@ -398,13 +403,14 @@ The following options are passed to the events:
 
 ```javascript
 options = {
-    prevCtrl     : previous controller which is being removed
-    newCtrl     : new controller being added
-    isMainCtrl  : (experimental) true if the new controller replaces the main view eg the target specified in kudu initialization is replaced. If false
-                  it means the new controller is a sub view on another controller
-    ctrlOptions : all the options used for the new controller
-		eventName   : name of the event which fired
-		error       : optionally specifies the error / errors which lead to the event being triggered   
+    prevCtrl     : // previous controller which is being removed
+    newCtrl     : // new controller being added
+    isMainCtrl  : // (experimental) true if the new controller replaces the main view eg the target 
+                  // specified in kudu initialization is replaced. If false
+                  // it means the new controller is a sub view on another controller
+    ctrlOptions : // all the options used for the new controller
+		eventName   : // name of the event which fired
+		error       : // optionally specifies the error / errors which lead to the event being triggered   
 }
 ```
 
