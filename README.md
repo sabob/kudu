@@ -79,12 +79,12 @@ options = {
         routes: // an object mapping URLs to Controller modules,
         defaultRoute: // the default route to load if no URL is specified eg. http://host/
         unknownRouteResolver: // a function that is called if none of the registered 
-            // routes matches the URL,
+            // routes matches the URL
 
-        intro: // a function for performing animations when showing the View,
-        outro: // a function for performing animations when removing the View,
+        intro: // a function for performing animations when showing the View
+        outro: // a function for performing animations when removing the View
         fx: // Specify weather effects and animations should be enabled or not, default 
-            // is false,
+            // is false
 
         viewFactory: // Provides a hook for creating views other than Ractive 
                      // instances. See ViewFactory section below
@@ -122,8 +122,11 @@ var CustomFactory = {
         return promise;
     }
 }
+```
 
 The above function accepts options consisting of the following:
+
+```javascript
 	var options = {
     args: an object that was passed to a new view from the current view
     ctrl: the controller to create
@@ -164,7 +167,7 @@ options: {
 };
 ```
 
-The "done" argument is a function to be called once the animation is finished to let kudu know the view is complete.
+The _done_ argument is a function to be called once the animation is finished to let kudu know the view is complete.
 
 Router
 ------
@@ -182,11 +185,29 @@ var routes = {
 			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url, the route defined as, '*', will match and it's controller instantiated.
 		};
 
+// Pass the routes to kudu
 kudu.init({
     target: "#container",
     routes: routes;
 });
 ```
+
+Route mappings
+--------------
+
+The following route mappings are supported:
+
+* **Segment parameters** are specified as a colon with a name eg: /person/**:id**
+The following url will match this route:
+/person/1
+
+* Query parameters are specified as ampersand separated values after the questionmark eg: /person**?id&name**
+The following url will match this route:
+/person?id=1&name=bob
+
+* Wildcards are specified as an asterisk eg: /view/*/person
+The following url will match this route:
+/view/anything/person
 
 Routes
 ------
@@ -214,8 +235,8 @@ router.addRoute(
 });
 ```
 
-Enter
------
+The route Enter function
+------------------------
 When navigating between views, Kudu will remove the current view from the DOM and then add the new view to the DOM. If kudu is created with
 the _fx_ option set to _true_, Kudu will animate the transition between views, by fading out the current view, remove it from the DOM, add
 the new view to the DOM, and finally fading in the new view.
@@ -264,9 +285,9 @@ var options = {
 };
 ```
 
-Leave
------
-Similar to the _enter_ function _, but _leave_ provides finer grained control to remove the view from the DOM and animate it.
+The route Leave function
+------------------------
+Similar to the _enter_ function _ _leave_ provides finer grained control to remove the view from the DOM and animate it.
 
 When providing a _leave_ function, Kudu will delegate the unrendering and animation of the view to that function.
 
@@ -307,10 +328,11 @@ var options = {
 };
 ```
 
-Controller
-----------
-Controllers are AMD modules that must implement an "onInit" function which returns a Ractive View instance or a Promise which resolves
-to a Ractive View. (Provide a custom ViewFactory to handle different types of views eg. an HTML view).
+Controllers
+-----------
+Controllers are AMD modules that must return an object which implement an _onInit_ function. _onInit_ must return a Ractive View instance
+or a Promise which resolves to a Ractive View. (If you want to implement views in an alternative technology to Ractive, eg. normal HTML,
+you can specify a custom _ViewFactory_ to handle different types of views).
 
 Example controller:
 
@@ -321,7 +343,7 @@ Example controller:
 	
         function homeCtrl() {
 		
-            var that = {};
+            var that = {}; // The object we will return from our module
 
             that.onInit = function(options) {
                 var data = {hello: "Hello World"};
@@ -331,11 +353,12 @@ Example controller:
 		
             return that;
         }
+
         return homeCtrl;
     });
 ```
 
-In the home controller above, the onInit function is implemented. onInit receives an _options_ object and must return the view.
+In the home controller above, we return an object that contains an _onInit_ method. _onInit_ receives an _options_ object and must return the view.
 
 In Kudu, views are Ractive instances, consisting of an HTML template and data. Ractive binds the HTML template and data to form the view.
 
@@ -377,12 +400,32 @@ onRemove
 
 Controllers can optionally implement an _onRemove_ method. This method controls whether the view can be removed or not. onRemove must return
 either true or false or a promise that resolves to true or false.
-If onRemove returns true, the view will be removed. If false, the request will be cancelled and the view will not be removed. This is useful
-in situations where a view wants to stop the user from navigating away until changes in a form has been saved, as an example.
+
+If _onRemove_ returns true, the view will be removed. If false, the request will be cancelled and the view will not be removed. This is useful
+in situations where a view wants to stop the user from navigating away until changes in a form has been saved, for example.
 
 onRemove options
 ----------------
 
+The following options are passed to the onRemove method:
+
+```javascript
+options = {
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls
+               // tracked this way will automatically abort when the view is removed. 
+               // ajaxTracker also provides a way to listen to ajax lifecycle events 
+               // such as ajax.start / ajax.stop etc.
+
+routeParams:   // all URL parameters (including segment parameters and query parameters) 
+               // are passed to the controller through the routeParams object.
+
+args:          // arguments passed to the controller from another controller. args can 
+               // only be passed to a view when called from a controller, not when 
+               // navigating via the URL hash
+
+view:          // a reference to the view that is going to be removed
+}
+```
 
 Gobal events
 ------------
@@ -406,6 +449,7 @@ viewComplete       : called after the controller's Ractive view has been rendere
 viewBeforeUnrender : called before view is removed from the dom. this event only occurs 
                      if the Controller.onRemove method returns true
 viewUnrender       : called after the controller's Ractive view has been removed from the DOM
+viewFail           : called when a view failed to create
 ```
 
 Global event options
@@ -421,9 +465,12 @@ options = {
                   // it means the new controller is a sub view on another controller
     ctrlOptions : // all the options used for the new controller
 		eventName   : // name of the event which fired
-		error       : // optionally specifies the error / errors which lead to the event being triggered   
+		error       : // optionally specifies the error (an array of error messages) which led to the event being triggered
 }
 ```
+
+Controller events
+-----------------
 
 The following events exist on a controller:
 ```
@@ -434,8 +481,8 @@ onRemove   : called before removing the controller
 onUnrender : called after the view has been removed from the DOM
 ```
 
-Example:
---------
+Controller events example:
+--------------------------
 
 ```javascript
 define(function (require) {
@@ -465,20 +512,3 @@ define(function (require) {
         return homeCtrl;
     });
 ```
-
-Routing
--------
-
-The following routing logic is supported:
-
-* Segment parameters are specified as a colon with a name eg: /person/:id
-The following url will match this route:
-/person/1
-
-* Query parameters are specified as ampersand separated values after the questionmark eg: /person?id&name
-The following url will match this route:
-/person?id=1&name=bob
-
-* Wildcards are specified as an asterisk eg: /view/*/person
-The following url will match this route:
-/view/anything/person
