@@ -198,13 +198,12 @@ Route mappings
 The following route mappings are supported:
 
 * **Segment parameters** are specified as a colon with a name eg: /person/**:id**
-The following url will match this route:
-/person/1
+The following url will match this route: _/person/1_
 
-* Query parameters are specified as ampersand separated values after the questionmark eg: _/person**?id&name**_. The following url will match
-this route: _/person?id=1&name=bob_
+* Query parameters are specified as ampersand separated values after the questionmark eg: _/person?**id**&**name**_. The following url will match
+this route: _/person?**id**=1&**name**=bob_
 
-* Wildcards are specified as an asterisk eg: _/view/*****/person_. The following url will match this route: _/view/anything/person_
+* Wildcards are specified as an asterisk eg: _/view/**&ast;**/person_. The following url will match this route: _/view/anything/person_
 
 Routes
 ------
