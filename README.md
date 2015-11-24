@@ -73,15 +73,23 @@ Kudu.init() accepts the following options:
 
 ```javascript
 options = {
-			target: // a CSS id selector specifying the DOM node where Views will be rendered to, eg. "#container",
-			routes: // an object mapping URLs to Controller modules,
-			defaultRoute: // the default route to load if no URL is specified eg. http://host/
-			unknownRouteResolver: // a function that is called if none of the registered routes matches the URL,
-			intro: // a function for performing animations when showing the View,
-			outro: // a function for performing animations when removing the View,
-			fx: // Specify weather effects and animations should be enabled or not, default is false,
-			viewFactory: // Provides a hook for creating views other than Ractive instances. See ViewFactory section below
-      debug: // specify debug mode, true or false. Default is true
+        target: // a CSS id selector specifying the DOM node where Views will be rendered 
+                // to, eg. "#container",
+
+        routes: // an object mapping URLs to Controller modules,
+        defaultRoute: // the default route to load if no URL is specified eg. http://host/
+        unknownRouteResolver: // a function that is called if none of the registered 
+            // routes matches the URL,
+
+        intro: // a function for performing animations when showing the View,
+        outro: // a function for performing animations when removing the View,
+        fx: // Specify weather effects and animations should be enabled or not, default 
+            // is false,
+
+        viewFactory: // Provides a hook for creating views other than Ractive 
+                     // instances. See ViewFactory section below
+
+        debug: // specify debug mode, true or false. Default is true
 		};
 ```
 
@@ -356,6 +364,7 @@ options = {
 
 routeParams:   // all URL parameters (including segment parameters and query parameters) 
                // are passed to the controller through the routeParams object.
+
 args:          // arguments passed to the controller from another controller. args can 
                // only be passed to a view when called from a controller, not when 
                // navigating via the URL hash
