@@ -383,17 +383,20 @@ $(kudu).on('viewInit', function (e, options) {
 ```
 	
 The following global events exist:
+```
 viewBeforeInit     : called before the controller.onInit method is called
 viewInit           : called after the controller.onInit method is called
 viewRender         : called after the controller's Ractive view has been added to the DOM
 viewComplete       : called after the controller's Ractive view has been rendered and completed any transitions
 viewBeforeUnrender : called before view is removed from the dom. this event only occurs if the Controller.onRemove method returns true
 viewUnrender       : called after the controller's Ractive view has been removed from the DOM
+```
 
 Global event options
 --------------------
 The following options are passed to the events:
 
+```javascript
 options = {
     prevCtrl     : previous controller which is being removed
     newCtrl     : new controller being added
@@ -403,13 +406,16 @@ options = {
 		eventName   : name of the event which fired
 		error       : optionally specifies the error / errors which lead to the event being triggered   
 }
+```
 
 The following events exist on a controller:
+```
 onInit     : the initialization event which must be implemented by each controller
 onRender   : called after the view has been added to the DOM
 onComplete : called after the view has been added to the DOM AND once all transitions has completed.
 onRemove   : called before removing the controller
 onUnrender : called after the view has been removed from the DOM
+```
 
 Example:
 --------
