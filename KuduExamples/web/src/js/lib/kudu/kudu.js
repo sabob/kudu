@@ -779,14 +779,11 @@ define(function (require) {
 			that.triggerEvent("viewFail", options);
 
 			if (initOptions.debug) {
-				if ($.isArray(options.error)) {
-					console.error(options.error[0], options);
-
- 				} else if (typeof options.error === 'string') {
-						console.error(options.error, options);
-					
-				} else {
+				if (options.error.length === 0) {
 					console.error("error occurred!", options);
+
+ 				} else {
+					console.error(options.error[0], options);
 				}
 			}
 		}
