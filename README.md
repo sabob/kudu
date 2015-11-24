@@ -349,14 +349,16 @@ The following options are passed to the onInit method:
 
 ```javascript
 options = {
-  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls tracked 
-               // this way will automatically abort when the view is removed. ajaxTracker also 
-               // provides a way to listen to ajax lifecycle events such as ajax.start / ajax.stop etc.
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls
+               // tracked this way will automatically abort when the view is removed. 
+               // ajaxTracker also provides a way to listen to ajax lifecycle events 
+               // such as ajax.start / ajax.stop etc.
 
-routeParams:   // all URL parameters (including segment parameters and query parameters) are 
-               // passed to the controller through the routeParams object.
-args:          // arguments passed to the controller from another controller. args can only be 
-               // passed to a view when called from a controller, not when navigating via the URL hash
+routeParams:   // all URL parameters (including segment parameters and query parameters) 
+               // are passed to the controller through the routeParams object.
+args:          // arguments passed to the controller from another controller. args can 
+               // only be passed to a view when called from a controller, not when 
+               // navigating via the URL hash
 }
 ```
 
