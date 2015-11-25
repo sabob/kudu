@@ -7,6 +7,7 @@ requirejs.config({
 	"baseUrl": "js/lib", // root folder where all our libraries are located
 	"paths": {
 		"app": "../app", // path to our application
+		"kudu": "kudu/src", // path to kudu source
 		//"moment": "moment",
 		//"numeral": "numeral",
 		//"bootstrap": '../app/plugins/bootstrap',
