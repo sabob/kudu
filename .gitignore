@@ -1,2 +1,8 @@
 /kudu/nbproject/private/
 /KuduExamples/web/src/js/lib/kudu/src/
+/kuduExamples/build/
+/kuduExamples/dist/
+/kuduExamples/web/src/build/node_modules/
+/kudu2/nbproject/private/
+/kuduExamples/deploy/
+/kuduExamples/jsbuild/node_modules/
