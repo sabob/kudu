@@ -12,7 +12,7 @@
 	version: "0.0.1",
     appDir: "../web/src",
    baseUrl: "js/lib",
-    dir: "../deploy/myapp",
+    dir: "../build/web", // output folder of build
     //optimize: 'uglify',
     optimize: 'none',
 	fileExclusionRegExp: /^node_modules$|^bower_components$/,
@@ -26,7 +26,8 @@
     paths: {
         "config": "../app/config/config",
         "requireLib": "require"
-        //"jquery": "empty:"    
+        //,"jquery": "empty:"
+		//,"ractive": "empty:"
     },
 	
 	//stubModules: [ 'rvc', 'text', "ractive", "jquery" ],

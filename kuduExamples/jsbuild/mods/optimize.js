@@ -1,3 +1,5 @@
+// modules: https://www.npmjs.com/package/requirejs
+
 var requirejs = require('requirejs');
 
 module.exports = function(config, done) {

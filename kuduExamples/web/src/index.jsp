@@ -18,6 +18,6 @@
         <div id="container"></div>
     </body>
     
-    <script data-main="js//app/config/config" src="js/lib/require.js">
+    <script data-main="js/app/config/config" src="js/lib/require.js">
         </script>
 </html>
