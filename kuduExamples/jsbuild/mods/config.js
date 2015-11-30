@@ -1,4 +1,6 @@
-// modules: https://www.npmjs.com/package/nodejs-config
+/* modules: 
+ * https://www.npmjs.com/package/nodejs-config
+ */
 
 var program = require('./cli');
 var nodeJsConfig = require('nodejs-config');

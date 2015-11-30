@@ -1,4 +1,6 @@
-// modules: https://www.npmjs.com/package/requirejs
+/* modules: 
+ * https://www.npmjs.com/package/requirejs
+ */
 
 var requirejs = require('requirejs');
 

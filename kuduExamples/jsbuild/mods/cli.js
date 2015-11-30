@@ -1,4 +1,6 @@
-// modules: https://www.npmjs.com/package/commander
+/* modules: 
+ * https://www.npmjs.com/package/commander
+ */
 
 var program = require('commander');
 
