@@ -56,7 +56,7 @@ _index.html
 ```
 
 The Home Controller is shown next. Controllers must implement an _onInit_ method that returns a Ractive instance.
-In the _createView_ function below we create a Ractive instance and pass in the *hello* variable.
+In the _createView_ function below we create a Ractive instance and pass in the **hello** variable.
 
 _homeCtrl.js_
 ```javascript
@@ -78,7 +78,7 @@ define(function (require) {
 		function createView() {
 		  var view = new template({
 			  data: {
-				  *hello*: "Hello World!"
+				  hello: "Hello World!"
 				}
 			});
 			return view;
@@ -90,7 +90,7 @@ define(function (require) {
 });
 ```
 
-The home template contains a mustache, _{{hello}}, which prints out the *hello* variable we passed to the Ractive instance above.
+The home template contains a mustache, _{{hello}}_, which prints out the **hello** variable we passed to the Ractive instance above.
 
 _home.html
 ```html
