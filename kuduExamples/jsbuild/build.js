@@ -14,11 +14,11 @@ var glob = require("glob");
 // Read in the build config file
 var rConfig = fs.readFileSync("./config/r.build.js", 'utf8');
 rConfig = eval(rConfig);
-versionAssets(rConfig);
 
-optimize(rConfig, function () {
+optimize(rConfig).then(function (buildResponse) {
 	renameConfigToRequire(rConfig);
 	versionAssets(rConfig);
+	console.log("Build completed successfully!");
 });
 
 function versionAssets(rConfig) {
