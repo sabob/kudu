@@ -59,7 +59,8 @@ var notFoundCtrl = require("notFoundCtrl");
     };
     options.routes = routes;
 
-// Initialize kudu with the given routes and a target id (#someId) where the views will be rendered to
+// Initialize kudu with the given routes and a target id (#someId) where the views will be
+//  rendered to
     kudu.init({
         target: "#container",
         routes: routes
@@ -77,7 +78,8 @@ options = {
                 // to, eg. "#container",
 
         routes: // an object mapping URLs to Controller modules,
-        defaultRoute: // the default route to load if no URL is specified eg. http://host/
+        defaultRoute: // the default route to load if no path is specified eg.
+                      // http://host/ instead of http://host/#home
         unknownRouteResolver: // a function that is called if none of the registered 
             // routes matches the URL
 
@@ -128,13 +130,14 @@ The above function accepts options consisting of the following:
 
 ```javascript
 	var options = {
-    args: an object that was passed to a new view from the current view
-    ctrl: the controller to create
-    mvc: the current view/controller instance
-    route: the route object to create a new view for
-    routeParams: the URL parameters
-    target: the CSS selector where the view must be rendered to
-    viewOrPromise: an object that was returned from the controller onInit() function, either a view or a promise that resolves to a view
+    args: // an object that was passed to a new view from the current view
+    ctrl: // the controller to create
+    mvc: // the current view/controller instance
+    route: // the route object to create a new view for
+    routeParams: // the URL parameters
+    target: // the CSS selector where the view must be rendered to
+    viewOrPromise: // an object that was returned from the controller onInit() function,
+                   // either a view or a promise that resolves to a view
 };
 ```
 
@@ -162,8 +165,8 @@ var intro = function (options, done) {
 
 options contain the following value:
 ```javascript
-options: {
-				target: // the CSS selector where the view was rendered to,
+var options: {
+    target: // the CSS selector where the view was rendered to,
 };
 ```
 
@@ -182,7 +185,8 @@ For example:
 var routes = {
 			home: {path: '/home', ctrl: customer},
 			customer: {path: '/customer', ctrl: customer},
-			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url, the route defined as, '*', will match and it's controller instantiated.
+			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url,
+                // the route defined as, '*', will match and it's controller instantiated.
 		};
 
 // Pass the routes to kudu
@@ -213,10 +217,15 @@ Routes consist of the following options:
 ```javascript
 {
     path:     // this is the url path to match
-    ctrl:     // if the path matches a url, this controller will be instantiated, alternatively specify the 'moduleId' option for lazy loading of the controller
-    moduleId: // if the path matches a url, the controller with this ID will be instantiated, alternatively specify the 'ctrl' option for eager loading of the controller
-    enter:    // a function for manually adding the view to the DOM and to perform custom intro animations. By default kudu insert views into the default target
-    leave:    // a function for manually removing the view from the DOM and to perform custom outro animations. By default kudu remove views from the default target
+    ctrl:     // if the path matches a url, this controller will be instantiated,
+              // alternatively specify the 'moduleId' option for lazy loading of the controller
+    moduleId: // if the path matches a url, the controller with this ID will be instantiated,
+              // alternatively specify the 'ctrl' option for eager loading of the controller
+    enter:    // a function for manually adding the view to the DOM and to perform custom
+              // intro animations. By default kudu insert views into the default target
+    leave:    // a function for manually removing the view from the DOM and to perform
+              // custom outro animations. By default kudu remove views from the default
+              // target
 }
 ```
 
@@ -376,10 +385,10 @@ The following options are passed to the onInit method:
 
 ```javascript
 options = {
-  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls
-               // tracked this way will automatically abort when the view is removed. 
-               // ajaxTracker also provides a way to listen to ajax lifecycle events 
-               // such as ajax.start / ajax.stop etc.
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax
+               // calls tracked this way will automatically abort when the view is
+               // removed. ajaxTracker also provides a way to listen to ajax lifecycle
+               //  events such as ajax.start / ajax.stop etc.
 
 routeParams:   // all URL parameters (including segment parameters and query parameters) 
                // are passed to the controller through the routeParams object.
@@ -407,15 +416,15 @@ The following options are passed to the onRemove method:
 
 ```javascript
 options = {
-  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax calls
-               // tracked this way will automatically abort when the view is removed. 
-               // ajaxTracker also provides a way to listen to ajax lifecycle events 
-               // such as ajax.start / ajax.stop etc.
+  ajaxTracker: // provides a means of registering ajax calls in the controller. Ajax
+               //  calls tracked this way will automatically abort when the view is
+               //  removed. ajaxTracker also provides a way to listen to ajax lifecycle
+               //  events such as ajax.start / ajax.stop etc.
 
-routeParams:   // all URL parameters (including segment parameters and query parameters) 
+routeParams:   // all URL parameters (including segment parameters and query parameters)
                // are passed to the controller through the routeParams object.
 
-args:          // arguments passed to the controller from another controller. args can 
+args:          // arguments passed to the controller from another controller. args can
                // only be passed to a view when called from a controller, not when 
                // navigating via the URL hash
 
@@ -439,12 +448,16 @@ The following global events exist:
 ```
 viewBeforeInit     : called before the controller.onInit method is called
 viewInit           : called after the controller.onInit method is called
-viewRender         : called after the controller's Ractive view has been added to the DOM
-viewComplete       : called after the controller's Ractive view has been rendered and completed 
+viewRender         : called after the controller's Ractive view has been added to the
+                     DOM
+viewComplete       : called after the controller's Ractive view has been rendered and
+                     completed 
                      any transitions
-viewBeforeUnrender : called before view is removed from the dom. this event only occurs 
+viewBeforeUnrender : called before view is removed from the dom. this event only 
+                     occurs 
                      if the Controller.onRemove method returns true
-viewUnrender       : called after the controller's Ractive view has been removed from the DOM
+viewUnrender       : called after the controller's Ractive view has been removed
+                     from the DOM
 viewFail           : called when a view failed to create
 ```
 
@@ -456,12 +469,14 @@ The following options are passed to the events:
 options = {
     prevCtrl     : // previous controller which is being removed
     newCtrl     : // new controller being added
-    isMainCtrl  : // (experimental) true if the new controller replaces the main view eg the target 
+    isMainCtrl  : // (experimental) true if the new controller replaces the main view eg.
+                  // the target 
                   // specified in kudu initialization is replaced. If false
                   // it means the new controller is a sub view on another controller
     ctrlOptions : // all the options used for the new controller
 		eventName   : // name of the event which fired
-		error       : // optionally specifies the error (an array of error messages) which led to the event being triggered
+		error       : // optionally specifies the error (an array of error messages)
+                  // which led to the event being triggered
 }
 ```
 
@@ -472,7 +487,8 @@ The following events exist on a controller:
 ```
 onInit     : the initialization event which must be implemented by each controller
 onRender   : called after the view has been added to the DOM
-onComplete : called after the view has been added to the DOM AND once all transitions has completed.
+onComplete : called after the view has been added to the DOM AND once all transitions
+             has completed.
 onRemove   : called before removing the controller
 onUnrender : called after the view has been removed from the DOM
 ```
