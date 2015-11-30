@@ -9,6 +9,74 @@ appropriate method such as "onInit", "onRender", "onRemove" etc.
 Each controller has an associated View and Model. The View is a Ractive instance that binds to the Model. The Model is a plain javascript
 object generally fetched as data from the server.
 
+Quick example
+-------------
+
+_setup.js_
+```javascript
+// Import some controllers
+var homeCtrl = require("homeCtrl");
+var personCtrl = require("personCtrl");
+
+    // Specify the routes
+    var routes = {
+        home: {path: 'home', ctrl: homeCtrl}
+        person: {path: 'person', ctrl: personCtrl}
+    };
+
+// Initialize kudu with the given routes and a target id (#someId) where the views will
+// be rendered to
+    kudu.init({
+        target: "#container",
+        routes: routes
+});
+```
+
+_homeCtrl.js_
+```javascript
+define(function (require) {
+	var template = require("rvc!./home"); // Import the home template
+
+	function home() {
+
+		var that = {};
+
+    // Implement the required onInit method that returns a Ractive ViewModel
+		that.onInit = function (options) {
+
+			 var view = createView();
+			 return view;
+
+		};
+
+		function createView() {
+		  var view = new template({
+			  data: {
+				  hello: "Hello World!"
+				}
+			});
+			return view;
+		}
+
+		return that;
+	}
+	return home;
+});
+```
+
+_home.html
+```html
+<div class="content">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Home page</h1>
+        </div>
+
+    </div>
+</div>
+```
+
 Setup
 -----
 
@@ -49,15 +117,12 @@ var homeCtrl = require("homeCtrl");
 var personCtrl = require("personCtrl");
 var notFoundCtrl = require("notFoundCtrl");
 
-    var options = {};
-
     // Specify the routes
     var routes = {
         home: {path: 'home', ctrl: homeCtrl}
         person: {path: 'person', ctrl: personCtrl}
         notFound: {path: '*', ctrl: notFound}
     };
-    options.routes = routes;
 
 // Initialize kudu with the given routes and a target id (#someId) where the views will
 // be rendered to
