@@ -59,8 +59,8 @@ var notFoundCtrl = require("notFoundCtrl");
     };
     options.routes = routes;
 
-// Initialize kudu with the given routes and a target id (#someId) where the views will be
-//  rendered to
+// Initialize kudu with the given routes and a target id (#someId) where the views will
+// be rendered to
     kudu.init({
         target: "#container",
         routes: routes
@@ -74,8 +74,8 @@ Kudu.init() accepts the following options:
 
 ```javascript
 options = {
-        target: // a CSS id selector specifying the DOM node where Views will be rendered 
-                // to, eg. "#container",
+        target: // a CSS id selector specifying the DOM node where Views will be 
+                // rendered to, eg. "#container",
 
         routes: // an object mapping URLs to Controller modules,
         defaultRoute: // the default route to load if no path is specified eg.
@@ -186,7 +186,8 @@ var routes = {
 			home: {path: '/home', ctrl: customer},
 			customer: {path: '/customer', ctrl: customer},
 			notFound: {path: '*', ctrl: notFound} // if none of the routes match the url,
-                // the route defined as, '*', will match and it's controller instantiated.
+                // the route defined as, '*', will match and it's controller
+                // instantiated.
 		};
 
 // Pass the routes to kudu
@@ -218,14 +219,14 @@ Routes consist of the following options:
 {
     path:     // this is the url path to match
     ctrl:     // if the path matches a url, this controller will be instantiated,
-              // alternatively specify the 'moduleId' option for lazy loading of the controller
-    moduleId: // if the path matches a url, the controller with this ID will be instantiated,
-              // alternatively specify the 'ctrl' option for eager loading of the controller
-    enter:    // a function for manually adding the view to the DOM and to perform custom
-              // intro animations. By default kudu insert views into the default target
-    leave:    // a function for manually removing the view from the DOM and to perform
-              // custom outro animations. By default kudu remove views from the default
-              // target
+              // alternatively specify the 'moduleId' option for lazy loading of the
+    moduleId: // controller if the path matches a url, the controller with this ID
+              // will be instantiated, alternatively specify the 'ctrl' option for
+    enter:    // eager loading of the controller a function for manually adding the 
+              // view to the DOM and to perform custom intro animations. By default
+    leave:    // kudu insert views into the default target a function for manually
+              // removing the view from the DOM and to perform custom outro
+              // animations. By default kudu remove views from the default target
 }
 ```
 
