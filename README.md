@@ -77,7 +77,7 @@ define(function (require) {
 
 		function createView() {
 		  var view = new template({
-			  data: {
+			  data: { // We pass a data object with the hello variable to the Ractive template
 				  hello: "Hello World!"
 				}
 			});
