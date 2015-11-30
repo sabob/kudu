@@ -12,6 +12,8 @@ object generally fetched as data from the server.
 Quick example
 -------------
 
+A basic _setup_ kudu, mapping URLs to Controllers.
+
 _setup.js_
 ```javascript
 // Import some controllers
@@ -50,19 +52,6 @@ _index.html
     
     <script data-main="js/app/config/config" src="js/lib/require.js"></script>
 </html>
-```
-
-_home.html
-```html
-<div class="content">
-    <div class="row">
-
-        <div class="col-md-12">
-            <h1>{{hello}}</h1>
-        </div>
-
-    </div>
-</div>
 ```
 
 The Home Controller is shown next. Controllers must implement an _onInit_ method that returns a Ractive instance.
