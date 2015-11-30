@@ -56,7 +56,7 @@ _index.html
 ```
 
 The Home Controller is shown next. Controllers must implement an _onInit_ method that returns a Ractive instance.
-In the _createView_ function below we create a Ractive instance and pass in the _hello_ variable.
+In the _createView_ function below we create a Ractive instance and pass in the *hello* variable.
 
 _homeCtrl.js_
 ```javascript
