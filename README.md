@@ -32,6 +32,42 @@ var personCtrl = require("personCtrl");
 });
 ```
 
+Below is a basic _index.html_.
+
+_index.html
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        
+        <title>Basic Kudu Demo</title>
+        <link rel="stylesheet" type="text/css" href="css/site.css" />
+    </head>
+    <body>
+       
+        <div id="container"></div>
+    </body>
+    
+    <script data-main="js/app/config/config" src="js/lib/require.js"></script>
+</html>
+```
+
+_home.html
+```html
+<div class="content">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>{{hello}}</h1>
+        </div>
+
+    </div>
+</div>
+```
+
+The Home Controller is shown next. Controllers must implement an _onInit_ method that returns a Ractive instance.
+In the _createView_ function we creae a Ractive instance and pass in the _hello_ variable.
+
 _homeCtrl.js_
 ```javascript
 define(function (require) {
@@ -64,13 +100,15 @@ define(function (require) {
 });
 ```
 
+The home template contains a mustache, _{{hello}}, which prints out the _hello_ variable.
+
 _home.html
 ```html
 <div class="content">
     <div class="row">
 
         <div class="col-md-12">
-            <h1>Home page</h1>
+            <h1>{{hello}}</h1>
         </div>
 
     </div>
