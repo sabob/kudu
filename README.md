@@ -34,7 +34,7 @@ var personCtrl = require("personCtrl");
 });
 ```
 
-Below is a basic _index.html_.
+Below is a basic _index.html_ template where our single page app (SPA) views will be rendered to.
 
 _index.html
 ```html
@@ -47,6 +47,7 @@ _index.html
     </head>
     <body>
        
+        <!-- View will be rendered to the div with id=container -->
         <div id="container"></div>
     </body>
     
@@ -55,7 +56,7 @@ _index.html
 ```
 
 The Home Controller is shown next. Controllers must implement an _onInit_ method that returns a Ractive instance.
-In the _createView_ function we creae a Ractive instance and pass in the _hello_ variable.
+In the _createView_ function below we create a Ractive instance and pass in the _hello_ variable.
 
 _homeCtrl.js_
 ```javascript
@@ -77,7 +78,7 @@ define(function (require) {
 		function createView() {
 		  var view = new template({
 			  data: {
-				  hello: "Hello World!"
+				  <span style="color: blue">hello</span>: "Hello World!"
 				}
 			});
 			return view;
@@ -89,7 +90,7 @@ define(function (require) {
 });
 ```
 
-The home template contains a mustache, _{{hello}}, which prints out the _hello_ variable.
+The home template contains a mustache, _{{hello}}, which prints out the <span style="color: blue">hello</span> variable we passed to the Ractive instance above.
 
 _home.html
 ```html
