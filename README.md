@@ -600,6 +600,7 @@ define(function (require) {
             var that = {};
 
             that.onInit = function(options) {
+                // View must be returned from onInit
             
                 var view = new template();
                 return view;
