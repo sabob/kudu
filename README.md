@@ -78,7 +78,7 @@ define(function (require) {
 		function createView() {
 		  var view = new template({
 			  data: {
-				  <span style="color: blue">hello</span>: "Hello World!"
+				  *hello*: "Hello World!"
 				}
 			});
 			return view;
@@ -90,7 +90,7 @@ define(function (require) {
 });
 ```
 
-The home template contains a mustache, _{{hello}}, which prints out the <span style="color: blue">hello</span> variable we passed to the Ractive instance above.
+The home template contains a mustache, _{{hello}}, which prints out the *hello* variable we passed to the Ractive instance above.
 
 _home.html
 ```html
