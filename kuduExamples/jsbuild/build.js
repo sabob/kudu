@@ -23,11 +23,11 @@ optimize(rConfig).then(function (buildResponse) {
 
 function versionAssets(rConfig) {
 
-	var versionInstance = new versioning({
+	var version = new versioning({
 		assets: [rConfig.dir + '/css/site.css', rConfig.dir + '/js/lib/require.js'],
 		grepFiles: [rConfig.dir + '/index.jsp']
 	});
-	versionInstance.run();
+	version.run();
 
 }
 
