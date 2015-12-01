@@ -23,7 +23,7 @@ optimize(rConfig, appConfig).then(function (buildResponse) {
 });
 
 function clean(config) {
-	fs.remove(config.dist);
+	fs.removeSync(config.dist);
 	console.log("Removed previous buildpath: " + config.dist);
 }
 
