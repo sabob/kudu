@@ -1,7 +1,6 @@
 define(function (require) {
 
 	var $ = require("jquery");
-//	var createView = require("../ractive/create");
 
 	function onInitHandler(options) {
 		

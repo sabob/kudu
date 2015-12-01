@@ -21,12 +21,12 @@ define(function (require) {
 	var simpleAjaxTrackerFn = require("./utils/simpleAjaxTracker");
 	var onInitHandler = require("./lifecycle/onInitHandler");
 	var onRemoveHandler = require("./lifecycle/onRemoveHandler");
-	var setupViewEvents = require("./ractive/setupEvents");
-	var setupDefaultViewEvents = require("./ractive/setupDefaultEvents");
+	var setupViewEvents = require("./ractivelib/setupEvents");
+	var setupDefaultViewEvents = require("./ractivelib/setupDefaultEvents");
 	var introFn = require("./transition/intro");
 	var outroFn = require("./transition/outro");
-	var ractiveViewFactory = require("./ractive/RactiveViewFactory");
-	//var unrenderView = require("./ractive/render/unrender");
+	var ractiveViewFactory = require("./ractivelib/RactiveViewFactory");
+	//var unrenderView = require("./ractivelib/render/unrender");
 	var severity = require("./utils/severity");
 	var utils = require("./utils/utils");
 
@@ -80,6 +80,10 @@ define(function (require) {
 				defaultRoute: options.defaultRoute,
 				unknownRouteResolver: options.unknownRouteResolver
 			});
+		};
+		
+		that.router = function() {
+			return router;
 		};
 		
 		that.validateInitOptions = function(options) {
