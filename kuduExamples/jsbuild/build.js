@@ -2,7 +2,7 @@
  * https://www.npmjs.com/package/fs-extra
  * https://www.npmjs.com/package/glob
  * https://www.npmjs.com/package/node-version-assets
-*/
+ */
 
 var cli = require('./mods/cli');
 var config = require('./mods/config');
@@ -15,10 +15,14 @@ var glob = require("glob");
 var rConfig = fs.readFileSync("./config/r.build.js", 'utf8');
 rConfig = eval(rConfig);
 
-optimize(rConfig).then(function (buildResponse) {
+var appConfig = config.get("app");
+optimize(rConfig, appConfig).then(function (buildResponse) {
+
 	renameConfigToRequire(rConfig);
-	versionAssets(rConfig);
-	console.log("Build completed successfully!");
+
+	versionAssets(rConfig).then(function () {
+		console.log("Build completed successfully!");
+	});
 });
 
 function versionAssets(rConfig) {
@@ -27,7 +31,16 @@ function versionAssets(rConfig) {
 		assets: [rConfig.dir + '/css/site.css', rConfig.dir + '/js/lib/require.js'],
 		grepFiles: [rConfig.dir + '/index.jsp']
 	});
-	version.run();
+
+	var promise = new Promise(function (resolve, reject) {
+
+		version.run(function () {
+			resolve();
+		});
+	});
+
+
+	return promise;
 
 }
 

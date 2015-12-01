@@ -6,8 +6,12 @@ var requirejs = require('requirejs');
 
 var promise = new Promise(function (resolve, reject) {
 
-	module.exports = function (config) {
-		requirejs.optimize(config, function (buildResponse) {
+	module.exports = function (rConfig, appConfig) {
+		
+		// Set the r.js build version to our app version
+		rConfig.version = appConfig.version;
+
+		requirejs.optimize(rConfig, function (buildResponse) {
 
 			// TODO replace uncommen jquery	
 

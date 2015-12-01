@@ -9,7 +9,6 @@
  */
 
 ({
-	version: "0.0.1",
     appDir: "../web/src",
    baseUrl: "js/lib",
     dir: "../build/web", // output folder of build

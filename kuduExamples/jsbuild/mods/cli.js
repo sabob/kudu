@@ -3,9 +3,10 @@
  */
 
 var program = require('commander');
+var defaultConfig = require('./defaultAppConfig');
 
 var commander = program
-		.version('0.0.1')
+		.version(defaultConfig.version)
 		.option('-p, --prod', 'Build production')
 		.option('-d, --dev', 'Build development');
 commander.parse(process.argv);
