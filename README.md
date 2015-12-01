@@ -6,8 +6,73 @@ kudu provides a router for mapping URLs to controllers. Controllers are essentia
 of an "initialization" phase, "rendering" phase and finally a "remove" phase. AMD modules can partake in these phases by implementing the
 appropriate method such as "onInit", "onRender", "onRemove" etc.
 
-Each controller has an associated View and Model. The View is a Ractive instance that binds to the Model. The Model is a plain javascript
+Each controller has an associated View and Model. The View is a [Ractive](http://www.ractivejs.org/) instance that binds to the Model. The Model is a plain javascript
 object generally fetched as data from the server.
+
+What is Ractive
+---------------
+Ractive is a ViewModel implementation which binds an HTML template to a data object. Ractive uses mustache based html templates and binds
+them to Javascript data objects.
+
+For example, given an html template, index.html:
+
+```html
+ <!doctype html>
+<html lang='en-GB'>
+<head>
+  <meta charset='utf-8'>
+  <title>Ractive test</title>
+</head>
+
+<body>
+  <h1>Ractive test</h1>
+
+  <!--
+       1. This is the element we'll render our Ractive to.
+  -->
+  <div id='container'></div>
+
+  <!--
+       2. You can load a template in many ways. For convenience, we'll include it in
+       a script tag so that we don't need to mess around with AJAX or multiline strings.
+       Note that we've set the type attribute to 'text/ractive' - though it can be
+       just about anything except 'text/javascript'
+  -->
+  <script id='template' type='text/ractive'>
+    <p>Hello, {{name}}!</p>
+  </script>
+```
+
+and this script:
+```javascript
+var ractive = new Ractive({
+      // The `el` option can be a node, an ID, or a CSS selector.
+      el: '#container',
+
+      // We could pass in a string, but for the sake of convenience
+      // we're passing the ID of the <script> tag above.
+      template: '#template',
+
+      // Here, we're passing in some initial data
+      data: { name: 'world' }
+    });
+```
+
+Running this in a browser will replace the _{{name}}_ mustache with the **name** variable, _world_. Changing the **name** variable will also
+update the template eg. In Ractive this can be done with:
+
+```javascript
+ractive.set('name', 'Steve');
+```
+
+and the template will change from _Hello world_ to _Hello Steve_.
+
+Checkout the [Ractive](http://www.ractivejs.org/) site for comprehensive documentation.
+
+Ractive is a library, not a framework, it does not ship with a router, or specify how to structure your code. Ractive is basically a way
+to 'componentize' your html pages, without worrying about navigating between views.
+
+This is where Kudu fits in. Kudu provides the 'C' in MVC. Kudu also provides a router and a way to navigate between views.
 
 Quick example
 -------------
