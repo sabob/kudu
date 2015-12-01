@@ -1,6 +1,6 @@
 define(function (require) {
 	var $ = require("jquery");
-	var kudu = require("kudu/kudu");
+	var kudu = require("kudu");
 	//require('ractive-transitions-fade');
 	var customer = require("../customer/customer");
 	var template = require("rvc!./home");

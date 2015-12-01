@@ -2,10 +2,9 @@ define(function (require) {
 	var $ = require("jquery");
 	var routes = require("app/config/routes");
 
-	var kudu = require("kudu/kudu");
-	var router = require("kudu/router/router");
+	var kudu = require("kudu");
 
-	router.addRoute({path: "/moo", moduleId: "one"});
+	kudu.router().addRoute({path: "/moo", moduleId: "one"});
 
 	kudu.init({
 		target: "#container",

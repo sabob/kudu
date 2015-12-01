@@ -1,8 +1,5 @@
 define(function (require) {
 
-	var $ = require("jquery");
-	var kudu = require("kudu/kudu");
-	var router = require("kudu/router/router");
 	var Ractive = require("ractive");
 	var home = require("app/views/home/home");
 	var customer = require("app/views/customer/customer");

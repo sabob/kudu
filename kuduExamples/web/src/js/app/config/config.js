@@ -5,27 +5,34 @@
 // except 'app' ones, 
 requirejs.config({
 	"baseUrl": "js/lib", // root folder where all our libraries are located
+
 	"paths": {
 		"app": "../app", // path to our application
-		"kudu": "kudu/src", // path to kudu source
+		//"kudu": "kudulib/src/kudu.0.0.1", // uncomment this line and *comment* the *map* section below to use the optimized version
 		//"moment": "moment",
 		//"numeral": "numeral",
 		//"bootstrap": '../app/plugins/bootstrap',
 		//'select2': '../app/plugins/select2',
-				  jquery: 'jquery-2.1.4'
+		"jquery": 'jquery-2.1.4'
 				//'ractive': 'http://cdn.ractivejs.org/edge/ractive',
 				//@,'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min'
 	},
+
+	map: {
+		'*': {
+			'kudu': 'kudulib/src/kudu'
+		}
+	},
+	
 	"shim": {
-				 
-		 //'bootstrap': {
-		 //deps: ['jquery']
-		 //},
-		 /*
-		'select2': {
-			deps: ['jquery'],
-			exports: 'Select2'
-		},*/
+		//'bootstrap': {
+		//deps: ['jquery']
+		//},
+		/*
+		 'select2': {
+		 deps: ['jquery'],
+		 exports: 'Select2'
+		 },*/
 	}
 });
 
