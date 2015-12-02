@@ -1,6 +1,5 @@
 define(function (require) {
 	var $ = require("jquery");
-	//require('ractive-transitions-fade');
 	var template = require("rvc!./notFound");
 
 	function notFound() {

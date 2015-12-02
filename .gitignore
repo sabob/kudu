@@ -6,3 +6,8 @@
 /kudu2/nbproject/private/
 /kuduExamples/deploy/
 /kuduExamples/jsbuild/node_modules/
+/templates/java/JavaTemplate/nbproject/private/
+/templates/java/javaTemplate/nbproject/private/
+/kudu/dist/
+/kudu/jsbuild/node_modules/
+/templates/java/javaTemplate/build/
